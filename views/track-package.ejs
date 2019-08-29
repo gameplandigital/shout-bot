@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Air Way Bill Tracking</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+    </script>
+    <style>
+      .header {
+        background: linear-gradient(to bottom right, #800080, #EE82EE);
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      b, h4 {
+        color: #800080;
+      }
+
+      .main {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      input {
+        margin-bottom: 15px;
+      }
+
+      .pdl-15 {
+        padding-left: 15%;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      input[type=submit], a {
+        align-self: center;
+      }
+
+      .card {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body> 
+    <div class="header">
+      <h1><img src="images/air21_logo_white.png" style="width: 160px;"></h1>
+    </div>
+    <div class="container-fluid">
+      <div class="main" id="form">
+        <form action="#" onsubmit="trackPackage(); return false;" disabled>
+          <input type="hidden" id="sender_psid" value="<%= sender_psid %>">
+          <div class="form-group">
+            <label for="usr"><b>Tracking Number:</b></label>
+            <input type="number" class="form-control" id="tracking-number" pattern="/^-?\d+\.?\d*$/" placeholder="ex. 600000000000" required>
+          </div>
+          <input type="submit" class="btn btn-info" id="btnSubmit" value="SUBMIT">
+        </form>
+        <br />
+      </div>
+      <div class="main" id="success" style="display: none;">
+        <div id="result"></div>
+      </div> 
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script>
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/messenger.Extensions.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'Messenger'));         
+
+    function saveAction (payload) {
+      var sender_psid = $("#sender_psid").val();
+      $.ajax({
+        method: "POST",
+        url: "/save-action",
+        dataType: "json",
+        data: {
+          sender_psid,
+          payload
+        },
+        success: function (res) {
+          console.log(res);
+        }
+      })
+    }
+
+    function renderResult(xml) {
+      var text, parser, xmlDoc;
+      parser = new DOMParser();
+      xmlDoc = parser.parseFromString(xml,"text/xml");
+      var xmlSize =  xmlDoc.getElementsByTagName("details").length;
+
+      var result = "";
+      result += "<div><b>AWB: </b> <span>" + xmlDoc.getElementsByTagName("airwaybill")[0].childNodes[0].nodeValue + "</span></div><br/>"
+      
+      if (xmlSize > 0) {
+        for (var i = 0; i < xmlSize; i++) {
+          result += "<div class='card'>";
+          result += "<div class='card-body'>";
+          result += "<b>Post Date: </b>" +  xmlDoc.getElementsByTagName("post_date")[i].childNodes[0].nodeValue + " " + xmlDoc.getElementsByTagName("post_time")[i].childNodes[0].nodeValue + "<br/>"
+          result += "<b>Post Location: </b> " +  xmlDoc.getElementsByTagName("post_location")[i].childNodes[0].nodeValue + "<br/>"
+          result += "<b>Post Status: </b> " +  xmlDoc.getElementsByTagName("status")[i].childNodes[0].nodeValue + "<br/>"
+          result += "<b>Scan Code: </b> " +  xmlDoc.getElementsByTagName("scancode")[i].childNodes[0].nodeValue + "<br/>"
+          result += "</div>";
+          result += "</div>";
+        }
+      } else {
+        result += "<div><b>Package not found. Please check you Air Way Bill Number.</b></div><br />";
+      }
+      result += "<a href='/track-package?sender_psid=<%= sender_psid %>' class='btn btn-info'>Go Back</a>";
+      $("#result").html(result);
+    }
+
+    function formDisabler() {
+      $("#tracking-number").attr("disabled", "disabled");
+      $("#btnSubmit").attr("disabled", "disabled");
+    }
+
+    function trackPackage () {
+      var tracking_number = $("#tracking-number").val();
+      formDisabler();
+      $.ajax({
+        method: "POST",
+        url: "/track-package",
+        dataType: "json",
+        data: {
+          tracking_number
+        },
+        success: function (res) {
+          if (res.success) {
+            $("#form").slideUp(500, function () {
+                renderResult(res.data);
+              $("#success").slideDown(250);
+              saveAction("OPEN_PACKAGE_TRACKER_SUCCESS");
+            })
+          } else {
+            console.log("Error");
+            saveAction("OPEN_PACKAGE_TRACKER_FAILED");
+          }
+        }
+      })
+    }
+    saveAction("OPEN_PACKAGE_TRACKER");
+  </script>
+</html>

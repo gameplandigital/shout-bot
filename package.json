@@ -1,0 +1,19 @@
+{
+  "name": "shout-bot",
+  "version": "1.0.0",
+  "description": "AIRCAST SHOUT BOT",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gameplandigital/shout-bot.git"
+  },
+  "author": "JOE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gameplandigital/shout-bot/issues"
+  },
+  "homepage": "https://github.com/gameplandigital/shout-bot#readme"
+}

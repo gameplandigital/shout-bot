@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Air 21 Send Concerns</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+    </script>
+    <style>
+      .header {
+        background: linear-gradient(to bottom right, #800080, #EE82EE);
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      b, h4 {
+        color: #800080;
+      }
+
+      .main {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      input {
+        margin-bottom: 15px;
+      }
+
+      .pdl-15 {
+        padding-left: 15%;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      input[type=submit], a {
+        align-self: center;
+      }
+
+    </style>
+  </head>
+  <body> 
+    <div class="header">
+      <h1><img src="images/air21_logo_white.png" style="width: 160px;"></h1>
+    </div>
+    <div class="container-fluid">
+      <div class="main" id="form">
+        <form action="#" onsubmit="sendConcern(); return false;" disabled>
+          <input type="hidden" id="sender_psid" value="<%= sender_psid %>">
+          <div class="form-group">
+            <label for="usr"><b>First Name</b></label>
+            <input type="text" class="form-control" id="firstName" placeholder="ex. Juan" required>
+          </div>
+          <div class="form-group">
+            <label for="usr"><b>Last Name</b></label>
+            <input type="text" class="form-control" id="lastName" placeholder="ex. Dela Cruz" required>
+          </div>
+          <div class="form-group">
+            <label for="usr"><b>Email Address</b></label>
+            <input type="email" class="form-control" id="emailAddress" placeholder="ex. youremail@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label for="usr"><b>Message</b></label><br />
+            <textarea class="form-control" id="message" rows=5 style="resize: none;" required></textarea>
+          </div>
+          <br/>
+          <input type="submit" class="btn btn-info" id="btnSubmit" value="SEND">
+        </form>
+        <br />
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script>
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/messenger.Extensions.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'Messenger'));         
+
+    function saveAction (payload) {
+      var sender_psid = $("#sender_psid").val();
+      $.ajax({
+        method: "POST",
+        url: "/save-action",
+        dataType: "json",
+        data: {
+          sender_psid,
+          payload
+        },
+        success: function (res) {
+          console.log(res);
+        }
+      })
+    }
+
+    function formDisabler() {
+      $("#firstName").attr("disabled", "disabled");
+      $("#lastName").attr("disabled", "disabled");
+      $("#emailAddress").attr("disabled", "disabled");
+      $("#message").attr("disabled", "disabled");
+      $("#btnSubmit").attr("disabled", "disabled");
+    }
+
+    function sendConcern () {
+      formDisabler();
+      var first_name = $("#firstName").val().toUpperCase();
+      var last_name = $("#lastName").val().toUpperCase();
+      var email = $("#emailAddress").val();
+      var message = $("#message").val();
+
+      $.ajax({
+        method: "POST",
+        url: "/send-concern",
+        dataType: "json",
+        data: {
+          first_name,
+          last_name,
+          email,
+          message
+        },
+        success: function (res) {
+          if (res.success) {
+            Swal.fire({
+              title: 'Success!',
+              text: "Your concern was successfully sent to us.",
+              type: 'success',
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Close'
+              }).then((result) => {
+                if (result.value) {
+                  window.extAsyncInit = function () {
+                    window.top.close();
+                    MessengerExtensions.requestCloseBrowser(function success() {
+                      console.log('close success');
+                    }, function error(err) {
+                      //alert(err);
+                    });    
+                  };
+                }
+              })
+            saveAction("OPEN_SEND_CONCERN_SUCCESS");
+          } else {
+            Swal.fire({
+              title: 'Oops!',
+              text: "Something went wrong. Please try again later.",
+              type: 'error',
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Close'
+              }).then((result) => {
+                if (result.value) {            
+                  window.extAsyncInit = function () {
+                    window.top.close();
+                    MessengerExtensions.requestCloseBrowser(function success() {
+                      console.log('close success');
+                    }, function error(err) {
+                      //alert(err);
+                    });    
+                  };
+                }
+              })
+            saveAction("OPEN_SEND_CONCERN_FAILED");
+          }
+        }
+      })
+    }
+    saveAction("OPEN_SEND_CONCERN");
+  </script>
+</html>

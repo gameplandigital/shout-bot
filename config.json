@@ -1,0 +1,8 @@
+{
+  "BOT_NAME": "SHOUT-BOT",
+  "APP_URL": "https://air21-bot.herokuapp.com/",
+  "VERIFY_TOKEN": "imevilgood",
+  "ACCESS_TOKEN": "EAAhbUZBO74ZAIBAFjT7OXF3vKPrztN3uZCdNWClmVZCnGaacG72RGZBc21KrCslDO7E40aVNsovtorKZAKevlzCZABkrX7XZCTvgKVe1wi082yxhPnwGZC13BgMgnwZAHvk96pFxXR5nuJ6jinrfIBvkIopVEQFzUS7sIAiGDQdcFLNQZDZD",
+  "GRAPH_VERSION": "v3.2",
+  "GOOGLE_KEY": "AIzaSyCaPXvqhFdmyjb6_kpYizN4h2B46xM4Jkg"
+}
