@@ -19,6 +19,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "moment-timezone": "^0.5.26",
     "request": "^2.88.0"
   }
 }
