@@ -506,13 +506,18 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
   if (payload === "QR_USER_AGREE") {
     user.getUserData(sender_psid, result => {
-      const user = JSON.parse(result);
+    const user = JSON.parse(result);
     senderAction(sender_psid, "typing_on");
     response = {
       text:
       "Hi! " +
       user.first_name +
       "👋,\n\nWelcome!\n. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
+    };
+    callSendAPI(sender_psid, response);
+
+    senderAction(sender_psid, "typing_on");
+    response = {
       attachment: {
         type: "template",
         payload: {
