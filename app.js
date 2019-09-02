@@ -120,7 +120,7 @@ const mainMenu = {
   persistent_menu: [
     {
       locale: "default",
-      composer_input_disabled: true,
+      composer_input_disabled: false,
       call_to_actions: [
         {
           title: "Main Menu",
@@ -193,7 +193,8 @@ var callSendAPI = (sender_psid, response) => {
 var handleMessage = (sender_psid, received_message) => {
   let response;
 
-  if (received_message.text === "") {
+  if (received_message.text === "0001") {
+
     senderAction(sender_psid, "typing_on");
   }
 
@@ -207,297 +208,64 @@ var handlePostback = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
-      callSendAPI(sender_psid, response);
       setTimeout(function() {
         senderAction(sender_psid, "typing_on");
         response = {
-          text:
-          "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
-          quick_replies: [
-            {
-              content_type: "text",
-              title: "I Agree.",
-              payload: "QR_USER_AGREE"
-            }
-          ]
+          text: "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "I Agree.",
+                payload: "QR_USER_AGREE"
+              }
+            ]
         };
         callSendAPI(sender_psid, response);
       }, 1000);
-    user.saveUser(sender_psid, "QR_USER_AGREE", result => {
-      if (result.success) {
-        console.log(
-          `Messenger ID ${sender_psid} action saved to the database.`
-        );
-      }
-    });
-  } else if (payload === "MENU_MAIN_MENU") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Package Status",
-              subtitle: "Know your package whereabouts.\n",
-              image_url: config.APP_URL + "/assets/packagestatus.png",
-              buttons: [
-                {
-                  type: "web_url",
-                  url:
-                    config.APP_URL +
-                    "/track-package?sender_psid=" +
-                    sender_psid,
-                  title: " Track Number",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                }
-              ]
-            },
-            {
-              title: "Find Nearest Business Hub",
-              subtitle: "Looking for our branches? We can guide you.",
-              image_url: config.APP_URL + "/assets/findnearestbranch.png",
-              buttons: [
-                {
-                  type: "web_url",
-                  url: "https://docdro.id/IX2GLen",
-                  title: "View list of hubs",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                },
-                {
-                  type: "postback",
-                  title: "Send my location",
-                  payload: "MENU_LOCATION"
-                },
-                {
-                  type: "postback",
-                  title: "Probihited Items",
-                  payload: "MENU_PROHIBITTED_ITEMS"
-                }
+    }
 
-              ]
-            },
-            {
-              title: "International Shipping",
-              subtitle: "Send international.",
-              image_url: config.APP_URL + "/assets/internationashipping.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_DOC"
-                },
-                {
-                  type: "postback",
-                  title: "Non Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_NODOC"
-                }
-              ]
-            },
-            {
-              title: "More",
-              subtitle:
-                "Still got questions? Learn more and find the answers here.",
-              image_url: config.APP_URL + "/assets/more.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Learn More ",
-                  payload: "MENU_MORE"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_LOCATION") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Click send location to recommend the nearest AIR21 Branch.\n(Please make sure to turn on your GPS Location for better results)",
-      quick_replies: [
-        {
-          content_type: "location"
-        },
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_PROHIBITTED_ITEMS") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "PROHIBITED ITEMS\n\n1. Explosives of any kind (Liquid, Solid, or Gas)\n2. Any article or substance, as presented for transport, which is liable to produce a dangerous evolution of heat or gas under the conditions normally encountered in air transport,\n3. Flammable solids and organic peroxides having, as tested, explosives properties, which are packed in such a way that the classification procedure would require the use of an explosives label as a subsidiary risk label\n4. Wet or dry ice\n5. Lottery tickets\n6. Money (Coins, Currency, Paper Money and Negotiable Instruments equivalent to cash such as endorsed stocks, bonds, and cash letters) \n7. Jewelries\n8. Replica or fake \n9. Live animals and plants \n10. Any shipment whose carriage is prohibited by Philippine law, statutes or regulations \n\n* Subject to Airline policy changes.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_INTERNATIONAL_SHIPPING_DOC") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "For International Shipping please visit our nearest Business Hub.\nhttps://www.air21.ph/locations/\n\nEmail address (PML)\ninternational@af2100.com",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_INTERNATIONAL_SHIPPING_NODOC") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "AIR21\nIf existing package, call UPS hotline.\n\nhttps://www.air21.ph/locations/",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Franchise",
-              subtitle:
-                "Build your business with us. Fill-out this franchise form.",
-              image_url: config.APP_URL + "/assets/franchise.png",
-              default_action: {
-                type: "web_url",
-                url: "https://www.air21.ph/Franchise%20Form.pdf",
-                webview_height_ratio: "full",
-                messenger_extensions: true
-              },
-              buttons: [
-                {
-                  title: "Learn more",
-                  type: "web_url",
-                  url: "https://www.air21.ph/Franchise%20Form.pdf",
-                  webview_height_ratio: "full",
-                  messenger_extensions: true
-                }
-              ]
-            },
-            {
-              title: "Career",
-              subtitle:
-                "Build your career with the Lina Group of Companies. Job vacancies are available at http://www.lina-group.com/careers",
-              image_url: config.APP_URL + "/assets/career.png",
-              default_action: {
-                type: "web_url",
-                url: "https://www.lina-group.com/careers",
-                webview_height_ratio: "tall",
-                messenger_extensions: true
-              },
-              buttons: [
-                {
-                  title: "Learn more",
-                  type: "web_url",
-                  url: "https://www.lina-group.com/careers",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: true
-                }
-              ]
-            },
-            {
-              title: "Review",
-              subtitle:
-                "Your feedback is important to us. How did we do today?",
-              image_url: config.APP_URL + "/assets/review.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Rate Me",
-                  payload: "MENU_MORE_RATE"
-                }
-              ]
-            },
-            {
-              title: "Concerns",
-              subtitle: "Your concern will help us to improve our ability\n",
-              image_url: config.APP_URL + "/assets/concerns.png",
-              buttons: [
-                {
-                  type: "web_url",
-                  url:
-                    config.APP_URL + "/send-concern?sender_psid=" + sender_psid,
-                  title: "Send Concerns",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: true
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE_RATE") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text: "Rate us based on your experience",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "🌟",
-          payload: "MENU_MORE_RATE_1"
-        },
-        {
-          content_type: "text",
-          title: "🌟🌟",
-          payload: "MENU_MORE_RATE_2"
-        },
-        {
-          content_type: "text",
-          title: "🌟🌟🌟",
-          payload: "MENU_MORE_RATE_3"
-        },
-        {
-          content_type: "text",
-          title: "🌟🌟🌟🌟",
-          payload: "MENU_MORE_RATE_4"
-        },
-        {
-          content_type: "text",
-          title: "🌟🌟🌟🌟🌟",
-          payload: "MENU_MORE_RATE_5"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
+  else if (payload === "PROMO_1") {
+    user.getUserData(sender_psid, result => {
+    const user = JSON.parse(result);
+  
+    setTimeout(function() {
+        senderAction(sender_psid, "typing_on");
+          response = {
+            text: "🎉 CONGRATULATIONS!! 🎉",
+          };
+        callSendAPI(sender_psid, response);
+    }, 1000);
+
+        senderAction(sender_psid, "typing_on");
+          response = {
+            text: "You just won your first promo " + user.name + "!!",
+          };
+        callSendAPI(sender_psid, response);
+
+    });
   }
+
+
+
+
+
+    user.saveUser(sender_psid, "QR_USER_AGREE", result => {
+      if (result.success) { 
+        console.log(`Messenger ID ${sender_psid} action saved to the database.`);
+       }
+      });
+
 
   user.saveUser(sender_psid, payload, result => {
     if (result.success) {
       console.log(`Messenger ID ${sender_psid} action saved to the database.`);
-    }
-  });
-};
+        }
+      });
+    };
+
+
+
+
 
 var handleQuickReply = (sender_psid, received_postback) => {
   let response;
@@ -532,8 +300,8 @@ var handleQuickReply = (sender_psid, received_postback) => {
               buttons: [
                 {
                   type: "postback",
-                  title: "Start",
-                  payload: "MENU_MORE"
+                  title: "Let's go",
+                  payload: "PROMO_1"
                 }
               ]
             },
@@ -545,8 +313,8 @@ var handleQuickReply = (sender_psid, received_postback) => {
               buttons: [
                 {
                   type: "postback",
-                  title: "Start",
-                  payload: "MENU_MORE"
+                  title: "Let's go",
+                  payload: "PROMO_2"
                 }
               ]
             }
@@ -555,164 +323,61 @@ var handleQuickReply = (sender_psid, received_postback) => {
       }
     };
     callSendAPI(sender_psid, response);
+   }
 
+  else if (payload === "MENU_MAIN_MENU") {
+    user.getUserData(sender_psid, result => {
+    const user = JSON.parse(result);
+    senderAction(sender_psid, "typing_on");
+    response = {
+      text:
+      "Hi! " + user.first_name + " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
+        };
+        callSendAPI(sender_psid, response);
+      });
 
-    
-  } else if (payload === "MENU_MORE_RATE_1") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Rated us 1 star, Thank you for your response! Your feedback helps us to continuously improve our services.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE_RATE_2") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Rated us 2 stars, Thank you for your response! Your feedback helps us to continuously improve our services.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE_RATE_3") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Rated us 3 stars, Thank you for your response! Your feedback helps us to continuously improve our services.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE_RATE_4") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Rated us 4 stars, Thank you for your response! Your feedback helps us to continuously improve our services.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MORE_RATE_5") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-        "Rated us 5 stars, Thank you for your response! Your feedback helps us to continuously improve our services.",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Back to Main Menu",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    };
-    callSendAPI(sender_psid, response);
-  } else if (payload === "MENU_MAIN_MENU") {
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Package Status",
-              subtitle: "Know your package whereabouts.\n",
-              image_url: config.APP_URL + "/assets/packagestatus.png",
-              buttons: [
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
                 {
-                  type: "web_url",
-                  url:
-                    config.APP_URL +
-                    "/track-package?sender_psid=" +
-                    sender_psid,
-                  title: " Track Number",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                }
-              ]
-            },
-            {
-              title: "Find Nearest Business Hub",
-              subtitle: "Looking for our branches? We can guide you.",
-              image_url: config.APP_URL + "/assets/findnearestbranch.png",
-              buttons: [
-                {
-                  type: "web_url",
-                  url: "https://docdro.id/IX2GLen",
-                  title: "View list of hubs",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
+                  title: "Promo 1",
+                  subtitle:
+                    "Participate to win the prize",
+                  image_url: config.APP_URL + "/images/1.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Let's go",
+                      payload: "PROMO_1"
+                    }
+                  ]
                 },
                 {
-                  type: "postback",
-                  title: "Send my location",
-                  payload: "MENU_LOCATION"
-                },
-                {
-                  type: "postback",
-                  title: "Probihited Items",
-                  payload: "MENU_PROHIBITTED_ITEMS"
-                }
-              ]
-            },
-            {
-              title: "International Shipping",
-              subtitle: "Send international.",
-              image_url: config.APP_URL + "/assets/internationashipping.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_DOC"
-                },
-                {
-                  type: "postback",
-                  title: "Non Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_NODOC"
-                }
-              ]
-            },
-            {
-              title: "More",
-              subtitle:
-                "Still got questions? Learn more and find the answers here.",
-              image_url: config.APP_URL + "/assets/more.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Learn More ",
-                  payload: "MENU_MORE"
+                  title: "Promo 2",
+                  subtitle:
+                    "Participate to win the prize",
+                  image_url: config.APP_URL + "/images/2.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Let's go",
+                      payload: "PROMO_2"
+                    }
+                  ]
                 }
               ]
             }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
+          }
+        };
+        callSendAPI(sender_psid, response);
+
   }
+
+
 
   user.saveUser(sender_psid, payload, result => {
     if (result.success) {
@@ -720,6 +385,12 @@ var handleQuickReply = (sender_psid, received_postback) => {
     }
   });
 };
+
+
+
+
+
+
 
 var handleAttachments = (sender_psid, received_postback) => {
   let response;
@@ -771,7 +442,7 @@ var handleAttachments = (sender_psid, received_postback) => {
         } else {
           response = {
             text:
-              "Ops! Something went wrong finding the nearest branch for you. Try again later.",
+              "Ops! Something went wrong finding the nearest Aircast for you. Try again later.",
             quick_replies: [
               {
                 content_type: "text",
@@ -818,14 +489,8 @@ var getStarted = () => {
     },
     whitelisted_domains: [
       config.APP_URL,
-      "https://air21.ph",
-      "https://www.air21.ph",
-      "https://www.lina-group.com",
-      "https://air21mail.herokuapp.com",
-      "https://air21bot.palmsolutions.co",
       "https://google.com",
-      "https://accounts.google.com",
-      "https://docdro.id/IX2GLen"
+      "https://accounts.google.com"
     ]
   };
 

@@ -29,7 +29,7 @@ var getUserData = (sender_psid, callback) => {
 
 var saveUser = (sender_psid, action, callback) => {
   con.query(
-    "SELECT * FROM air21_users WHERE MessengerId = ?",
+    "SELECT * FROM  WHERE MessengerId = ?",
     [sender_psid],
     (error, result) => {
       if (error) throw err;
