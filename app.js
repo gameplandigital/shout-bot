@@ -207,21 +207,12 @@ var handlePostback = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
-    user.getUserData(sender_psid, result => {
-      const user = JSON.parse(result);
-      senderAction(sender_psid, "typing_on");
-      response = {
-        text:
-          "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. "
-      };
       callSendAPI(sender_psid, response);
       setTimeout(function() {
         senderAction(sender_psid, "typing_on");
         response = {
           text:
-            "Hi, " +
-            user.first_name + "👋" +
-            "!\n\nWelcome!. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede.",
+          "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
           quick_replies: [
             {
               content_type: "text",
@@ -232,7 +223,6 @@ var handlePostback = (sender_psid, received_postback) => {
         };
         callSendAPI(sender_psid, response);
       }, 1000);
-    });
     user.saveUser(sender_psid, "QR_USER_AGREE", result => {
       if (result.success) {
         console.log(
@@ -515,8 +505,14 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
+    user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
     senderAction(sender_psid, "typing_on");
     response = {
+      text:
+      "Hi! " +
+      user.first_name +
+      "👋,\n\nWelcome!\n. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
       attachment: {
         type: "template",
         payload: {
@@ -543,6 +539,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
         }
       }
     };
+  });
     callSendAPI(sender_psid, response);
   } else if (payload === "MENU_MORE_RATE_1") {
     senderAction(sender_psid, "typing_on");
