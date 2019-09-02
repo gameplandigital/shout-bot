@@ -204,7 +204,6 @@ var handleMessage = (sender_psid, received_message) => {
 // FUNCTION THAT HANDLE POSTBACKS
 var handlePostback = (sender_psid, received_postback) => {
   let response;
-
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
@@ -226,6 +225,7 @@ var handlePostback = (sender_psid, received_postback) => {
 
  // ---------------------------- PROMO_1 ---------------------------------
  else if (payload === "PROMO_1") {
+   console.log("WORKING PROMO_1")
   user.getUserData(sender_psid, result => {
   const user = JSON.parse(result);
   response = {
