@@ -224,32 +224,23 @@ var handlePostback = (sender_psid, received_postback) => {
     }
 
  // ---------------------------- PROMO_1 ---------------------------------
- else if (payload === "PROMO_1") {
-   console.log("WORKING PROMO_1")
-  user.getUserData(sender_psid, result => {
-  const user = JSON.parse(result);
-  senderAction(sender_psid, "typing_on");
-  response = {
-        text :       
-         "Hi There! 👋" +
-           user.first_name +
-           "\n\nReady to apply for a loan now?",
-        quick_replies : [
-          {
-            content_type: "text",
-            title: "Lets go! 👍",
-            payload: "NAME_NO"                                
-          },
-          {
-            content_type: "text",
-            title: "Maybe Later! 👎",
-            payload: "MENU_MAIN_MENU"                                
+      else if (payload == "Detls_4") {
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "Our RFC representative will call to inform you if your application is already approved."                                
           }
-        ]
-   }
-  callSendAPI(sender_psid, response);
-  });
-}
+          callSendAPI(sender_psid, response);
+        }, 2000);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "He/she will also request you to complete the required documentations & will convey the instructions on how to claim your loan."                                
+          }
+          callSendAPI(sender_psid, response);
+        }, 2300);
+      }
 
 
 
