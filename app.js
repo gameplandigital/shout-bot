@@ -403,6 +403,51 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
   }
 
+  else if (payload === "PROMO_1") {
+    user.getUserData(sender_psid, result => {
+    const user = JSON.parse(result);
+  
+    setTimeout(function() {
+        senderAction(sender_psid, "typing_on");
+          response = {
+            text: "🎉 CONGRATULATIONS!! 🎉",
+          };
+        callSendAPI(sender_psid, response);
+      }, 1000);
+
+        senderAction(sender_psid, "typing_on");
+          response = {
+            text: "You just won your first promo " + user.name + "!!",
+          };
+        callSendAPI(sender_psid, response);
+
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+            payload: {
+               template_type: "media",
+               elements: [
+                  {
+                    media_type: "<image|video>",
+                    url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
+                    buttons: [
+                      {
+                         type: "web_url",
+                         url: "<www.google.com>",
+                         title: "Claim promo",
+                      }
+                   ]              
+                  }
+               ]
+            }
+          }           
+        };
+        callSendAPI(sender_psid, response);
+    });
+  }
+
+
 
 
   user.saveUser(sender_psid, payload, result => {
