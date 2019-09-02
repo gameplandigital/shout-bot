@@ -252,7 +252,7 @@ var handlePostback = (sender_psid, received_postback) => {
                 elements: [
                    {
                      media_type: "image",
-                     url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
+                     url: "https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater",
                      buttons: [
                        {
                           type: "web_url",
