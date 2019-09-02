@@ -256,7 +256,7 @@ var handlePostback = (sender_psid, received_postback) => {
                      buttons: [
                        {
                           type: "web_url",
-                          url: "<www.google.com>",
+                          url: "www.google.com",
                           title: "Claim promo",
                        }
                     ]              
