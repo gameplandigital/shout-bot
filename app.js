@@ -224,54 +224,31 @@ var handlePostback = (sender_psid, received_postback) => {
       }, 1000);
     }
 
-  else if (payload === "PROMO_1") {
-    console.log("===========================================")
-    console.log("WORKING PROMO 1")
-    user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-  
-    setTimeout(function() {
-        senderAction(sender_psid, "typing_on");
-          response = {
-            text: "🎉 CONGRATULATIONS!! 🎉",
-          };
-        callSendAPI(sender_psid, response);
-    }, 1000);
-
-        senderAction(sender_psid, "typing_on");
-          response = {
-            text: "You just won your first promo " + user.name + "!!",
-          };
-        callSendAPI(sender_psid, response);
-
-        // senderAction(sender_psid, "typing_on");
-        // response = {
-        //   attachment: {
-        //     type: "template",
-        //     payload: {
-        //        template_type: "media",
-        //        elements: [
-        //           {
-        //             media_type: "<image|video>",
-        //             url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
-        //             buttons: [
-        //               {
-        //                  type: "web_url",
-        //                  url: "<www.google.com>",
-        //                  title: "Claim promo",
-        //               }
-        //            ]              
-        //           }
-        //        ]
-        //     }
-        //   }           
-        // };
-        // callSendAPI(sender_psid, response);
-
-        
-
-    });
-  }
+ // ---------------------------- PROMO_1 ---------------------------------
+ else if (payload === "PROMO_1") {
+  user.getUserData(sender_psid, result => {
+  const user = JSON.parse(result);
+  response = {
+        text :       
+         "Hi There! 👋" +
+           user.first_name +
+           "\n\nReady to apply for a loan now?",
+        quick_replies : [
+          {
+            content_type: "text",
+            title: "Lets go! 👍",
+            payload: "NAME_NO"                                
+          },
+          {
+            content_type: "text",
+            title: "Maybe Later! 👎",
+            payload: "MENU_MAIN_MENU"                                
+          }
+        ]
+   }
+  callSendAPI(sender_psid, response);
+  });
+}
 
 
 
