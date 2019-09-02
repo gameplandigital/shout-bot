@@ -212,7 +212,7 @@ var handlePostback = (sender_psid, received_postback) => {
       senderAction(sender_psid, "typing_on");
       response = {
         text:
-          "Welcome to the AIR21 Chatbot. I can help you track a package, find our nearest business hubs, and answer your other questions."
+          "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. "
       };
       callSendAPI(sender_psid, response);
       setTimeout(function() {
@@ -220,8 +220,8 @@ var handlePostback = (sender_psid, received_postback) => {
         response = {
           text:
             "Hi, " +
-            user.first_name +
-            "!\n\nYour usage of the AIR21PH Messenger indicates your understanding, agreement to and acceptance of the full Terms and Conditions (http://air21.ph/terms) and Privacy Policy (http://air21.ph/privacy_policy) of AIR21.",
+            user.first_name + "👋" +
+            "!\n\nWelcome!. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede.",
           quick_replies: [
             {
               content_type: "text",
@@ -539,60 +539,6 @@ var handleQuickReply = (sender_psid, received_postback) => {
                 }
               ]
             },
-            {
-              title: "Find Nearest Business Hub",
-              subtitle: "Looking for our branches? We can guide you.",
-              image_url: config.APP_URL + "/assets/findnearestbranch.png",
-              buttons: [
-                {
-                  type: "web_url",
-                  url: "https://docdro.id/IX2GLen",
-                  title: "View list of hubs",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                },
-                {
-                  type: "postback",
-                  title: "Send my location",
-                  payload: "MENU_LOCATION"
-                },
-                {
-                  type: "postback",
-                  title: "Probihited Items",
-                  payload: "MENU_PROHIBITTED_ITEMS"
-                }
-              ]
-            },
-            {
-              title: "International Shipping",
-              subtitle: "Send international.",
-              image_url: config.APP_URL + "/assets/internationashipping.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_DOC"
-                },
-                {
-                  type: "postback",
-                  title: "Non Documents ",
-                  payload: "MENU_INTERNATIONAL_SHIPPING_NODOC"
-                }
-              ]
-            },
-            {
-              title: "More",
-              subtitle:
-                "Still got questions? Learn more and find the answers here.",
-              image_url: config.APP_URL + "/assets/more.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Learn More ",
-                  payload: "MENU_MORE"
-                }
-              ]
-            }
           ]
         }
       }
@@ -783,44 +729,6 @@ var handleAttachments = (sender_psid, received_postback) => {
           let loc = {
             address: ""
           };
-
-          // console.log(results);
-
-          // for (var i = 0; i < results[0].address_components.length; i++) {
-          //   if (results[0].address_components[i].types[0] == "street_number") {
-          //     loc.address = results[0].address_components[i].long_name;
-          //   }
-          //   if (results[0].address_components[i].types[0] == "route") {
-          //     loc.address =
-          //       loc.address + " " + results[0].address_components[i].long_name;
-          //   }
-          // }
-
-          // for (var i = 0; i < results[1].address_components.length; i++) {
-          //   if (results[1].address_components[i].types[0] == "neighborhood") {
-          //     loc.address =
-          //       loc.address + ", " + results[1].address_components[i].long_name;
-          //   }
-          //   if (results[1].address_components[i].types[0] == "sub_locality") {
-          //     loc.address =
-          //       loc.address + ", " + results[1].address_components[i].long_name;
-          //   }
-          //   if (results[1].address_components[i].types[0] == "locality") {
-          //     loc.address =
-          //       loc.address + ", " + results[1].address_components[i].long_name;
-          //   }
-          //   if (
-          //     results[1].address_components[i].types[0] ==
-          //     "administrative_area_level_1"
-          //   ) {
-          //     loc.address =
-          //       loc.address + ", " + results[1].address_components[i].long_name;
-          //   }
-          //   if (results[1].address_components[i].types[0] == "country") {
-          //     loc.address =
-          //       loc.address + ", " + results[1].address_components[i].long_name;
-          //   }
-          // }
 
           user.getBranches(latitude, longitude, result => {
             let location = "";
