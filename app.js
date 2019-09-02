@@ -250,12 +250,20 @@ var handlePostback = (sender_psid, received_postback) => {
                template_type: "media",
                elements: [
                   {
-                    media_type: "image",
-                    image_url: config.APP_URL + "/images/greet1.png",
+                    media_type: "<image|video>",
+                    url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
+                    buttons: [
+                      {
+                         type: "web_url",
+                         url: "<www.google.com>",
+                         title: "Claim promo",
+                      }
+                   ]              
                   }
                ]
             }
-          }           };
+          }           
+        };
         callSendAPI(sender_psid, response);
 
         
