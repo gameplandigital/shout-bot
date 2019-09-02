@@ -251,7 +251,7 @@ var handlePostback = (sender_psid, received_postback) => {
                 template_type: "media",
                 elements: [
                    {
-                     media_type: "<image|video>",
+                     media_type: "image",
                      url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
                      buttons: [
                        {
