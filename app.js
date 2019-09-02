@@ -224,7 +224,8 @@ var handlePostback = (sender_psid, received_postback) => {
     }
 
  // ---------------------------- PROMO_1 ---------------------------------
-      else if (payload == "Detls_4") {
+      else if (payload == "PROMO_1") {
+        console.log("____WORKING_________")
         setTimeout(function(){     
           senderAction(sender_psid, "typing_on");
           response = {   
@@ -240,6 +241,8 @@ var handlePostback = (sender_psid, received_postback) => {
           }
           callSendAPI(sender_psid, response);
         }, 2300);
+        console.log("____WORKING_________")
+
       }
 
 
