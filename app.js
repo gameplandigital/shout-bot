@@ -229,7 +229,7 @@ var handlePostback = (sender_psid, received_postback) => {
         setTimeout(function(){     
           senderAction(sender_psid, "typing_on");
           response = {   
-            text: "Our RFC representative will call to inform you if your application is already approved."                                
+            text: "🎉 CONGRATULATIONS!! 🎉"
           }
           callSendAPI(sender_psid, response);
         }, 2000);
@@ -237,11 +237,35 @@ var handlePostback = (sender_psid, received_postback) => {
         setTimeout(function(){     
           senderAction(sender_psid, "typing_on");
           response = {   
-            text: "He/she will also request you to complete the required documentations & will convey the instructions on how to claim your loan."                                
+            text: "You just won your first promo " + user.name + "!!"
           }
           callSendAPI(sender_psid, response);
         }, 2300);
         console.log("____WORKING_________")
+
+         senderAction(sender_psid, "typing_on");
+         response = {
+           attachment: {
+             type: "template",
+             payload: {
+                template_type: "media",
+                elements: [
+                   {
+                     media_type: "<image|video>",
+                     url: "<https://www.facebook.com/photo.php?fbid=450031365599491&set=a.450031398932821&type=3&theater>",
+                     buttons: [
+                       {
+                          type: "web_url",
+                          url: "<www.google.com>",
+                          title: "Claim promo",
+                       }
+                    ]              
+                   }
+                ]
+             }
+           }           
+         };
+         callSendAPI(sender_psid, response);
 
       }
 
@@ -404,7 +428,7 @@ var handleAttachments = (sender_psid, received_postback) => {
     request(
       {
         method: "GET",
-        url: "https://maps.googleapis.com/maps/api/geocode/json",
+        url: "https:maps.googleapis.com/maps/api/geocode/json",
         qs: {
           latlng: latitude + "," + longitude,
           key: config.GOOGLE_KEY
