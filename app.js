@@ -242,6 +242,24 @@ var handlePostback = (sender_psid, received_postback) => {
           };
         callSendAPI(sender_psid, response);
 
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+            payload: {
+               template_type: "media",
+               elements: [
+                  {
+                    media_type: "image",
+                    image_url: config.APP_URL + "/images/greet1.png",
+                  }
+               ]
+            }
+          }           };
+        callSendAPI(sender_psid, response);
+
+        
+
     });
   }
 
