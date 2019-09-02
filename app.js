@@ -512,7 +512,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
       text:
       "Hi! " +
       user.first_name +
-      " 👋,\n\nWelcome!!.\n I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
+      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
     };
     callSendAPI(sender_psid, response);
   });
@@ -525,39 +525,28 @@ var handleQuickReply = (sender_psid, received_postback) => {
           template_type: "generic",
           elements: [
             {
-              title: "Package Status",
-              subtitle: "Know your package whereabouts.\n",
-              image_url: config.APP_URL + "/assets/packagestatus.png",
+              title: "Promo 1",
+              subtitle:
+                "Participate to win the prize",
+              image_url: config.APP_URL + "/images/1.png",
               buttons: [
                 {
-                  type: "web_url",
-                  url:
-                    config.APP_URL +
-                    "/track-package?sender_psid=" +
-                    sender_psid,
-                  title: " Track Number",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                },
+                  type: "postback",
+                  title: "Start",
+                  payload: "MENU_MORE"
+                }
+              ]
+            },
+            {
+              title: "Promo 2",
+              subtitle:
+                "Participate to win the prize",
+              image_url: config.APP_URL + "/images/2.png",
+              buttons: [
                 {
-                  type: "web_url",
-                  url:
-                    config.APP_URL +
-                    "/track-package?sender_psid=" +
-                    sender_psid,
-                  title: " Track Number",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
-                },
-                {
-                  type: "web_url",
-                  url:
-                    config.APP_URL +
-                    "/track-package?sender_psid=" +
-                    sender_psid,
-                  title: " Track Number",
-                  webview_height_ratio: "tall",
-                  messenger_extensions: "true"
+                  type: "postback",
+                  title: "Start",
+                  payload: "MENU_MORE"
                 }
               ]
             }
@@ -566,6 +555,9 @@ var handleQuickReply = (sender_psid, received_postback) => {
       }
     };
     callSendAPI(sender_psid, response);
+
+
+    
   } else if (payload === "MENU_MORE_RATE_1") {
     senderAction(sender_psid, "typing_on");
     response = {
