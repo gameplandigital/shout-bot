@@ -515,6 +515,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
       "👋,\n\nWelcome!\n. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
     };
     callSendAPI(sender_psid, response);
+  });
 
     senderAction(sender_psid, "typing_on");
     response = {
@@ -537,14 +538,33 @@ var handleQuickReply = (sender_psid, received_postback) => {
                   title: " Track Number",
                   webview_height_ratio: "tall",
                   messenger_extensions: "true"
+                },
+                {
+                  type: "web_url",
+                  url:
+                    config.APP_URL +
+                    "/track-package?sender_psid=" +
+                    sender_psid,
+                  title: " Track Number",
+                  webview_height_ratio: "tall",
+                  messenger_extensions: "true"
+                },
+                {
+                  type: "web_url",
+                  url:
+                    config.APP_URL +
+                    "/track-package?sender_psid=" +
+                    sender_psid,
+                  title: " Track Number",
+                  webview_height_ratio: "tall",
+                  messenger_extensions: "true"
                 }
               ]
-            },
+            }
           ]
         }
       }
     };
-  });
     callSendAPI(sender_psid, response);
   } else if (payload === "MENU_MORE_RATE_1") {
     senderAction(sender_psid, "typing_on");
