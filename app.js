@@ -512,7 +512,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
       text:
       "Hi! " +
       user.first_name +
-      "👋,\n\nWelcome!\n. I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
+      " 👋,\n\nWelcome!!.\n I am the Aircast shout bot. Choose the promo you want on the menu below so we can procede. 😉",
     };
     callSendAPI(sender_psid, response);
   });
