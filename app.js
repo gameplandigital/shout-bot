@@ -206,36 +206,7 @@ var handlePostback = (sender_psid, received_postback) => {
   let response;
   let payload = received_postback.payload;
 
-
-   // ---------------------------- PROMO_1 ---------------------------------
-  if (payload === "PROMO_1") {
-  console.log("WORKING PROMO_1")
- user.getUserData(sender_psid, result => {
- const user = JSON.parse(result);
- response = {
-       text :       
-        "Hi There! 👋" +
-          user.first_name +
-          "\n\nReady to apply for a loan now?",
-       quick_replies : [
-         {
-           content_type: "text",
-           title: "Lets go! 👍",
-           payload: "NAME_NO"                                
-         },
-         {
-           content_type: "text",
-           title: "Maybe Later! 👎",
-           payload: "MENU_MAIN_MENU"                                
-         }
-       ]
-  }
- callSendAPI(sender_psid, response);
- });
-}
-
-
-  else if (payload === "GET_STARTED") {
+  if (payload === "GET_STARTED") {
       setTimeout(function() {
         senderAction(sender_psid, "typing_on");
         response = {
@@ -252,6 +223,33 @@ var handlePostback = (sender_psid, received_postback) => {
       }, 1000);
     }
 
+ // ---------------------------- PROMO_1 ---------------------------------
+ else if (payload === "PROMO_1") {
+   console.log("WORKING PROMO_1")
+  user.getUserData(sender_psid, result => {
+  const user = JSON.parse(result);
+  senderAction(sender_psid, "typing_on");
+  response = {
+        text :       
+         "Hi There! 👋" +
+           user.first_name +
+           "\n\nReady to apply for a loan now?",
+        quick_replies : [
+          {
+            content_type: "text",
+            title: "Lets go! 👍",
+            payload: "NAME_NO"                                
+          },
+          {
+            content_type: "text",
+            title: "Maybe Later! 👎",
+            payload: "MENU_MAIN_MENU"                                
+          }
+        ]
+   }
+  callSendAPI(sender_psid, response);
+  });
+}
 
 
 
