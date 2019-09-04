@@ -275,9 +275,8 @@ var handlePostback = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
-    user.getUserData(sender_psid, result => {
-      const user = JSON.parse(result);
-      senderAction(sender_psid, "typing_on");
+      setTimeout(function() {
+        senderAction(sender_psid, "typing_on");
         response = {
           text: "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
             quick_replies: [
