@@ -408,23 +408,26 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
-    con.query(
-            "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-              "SHOUT",
-              sender_psid,
-              user.picture.data.url,
-              user.first_name,
-              user.last_name,
-              moment().format("YYYY/MM/DD HH:mm:ss"),
-              moment().format("YYYY/MM/DD HH:mm:ss"),
-              action
-            ]
-          )
-          console.log("SAVED TO DATABASE")
-
     user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
+
+    con.query(
+      "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        "SHOUT",
+        sender_psid,
+        user.picture.data.url,
+        user.first_name,
+        user.last_name,
+        moment().format("YYYY/MM/DD HH:mm:ss"),
+        moment().format("YYYY/MM/DD HH:mm:ss"),
+        action
+      ]
+    )
+    console.log("SAVED TO DATABASE")
+
+
+
     senderAction(sender_psid, "typing_on");
     response = {
       text:
