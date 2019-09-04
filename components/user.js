@@ -28,6 +28,7 @@ var getUserData = (sender_psid, callback) => {
 };
 
  var saveUser = (sender_psid, action, callback) => {
+   console.log("________________________________________________________________________________")
    con.query(
      "SELECT * FROM shout_users WHERE MessengerId = ?",
      [sender_psid],
