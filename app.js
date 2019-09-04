@@ -8,7 +8,13 @@ const express = require("express"),
   config = require("./config.json"),
   user = require("./components/user"),
   conn = require("./components/connection"),
-  mysql = require("mysql");
+  mysql = require("mysql"),  
+  moment = require("moment-timezone");
+  moment.tz.setDefault("Asia/Manila");
+
+
+  
+
 
 let app = express();
 let con = conn.connection;
@@ -208,7 +214,7 @@ var handleMessage = (sender_psid, received_message) => {
 function promo1(sender_psid){
   let response;
     console.log("----- PROMO 1 WORKING -----")
-    user.getUserData1(sender_psid, result => {
+    user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
       senderAction(sender_psid, "typing_on");
         response = {   
@@ -288,7 +294,7 @@ var handlePostback = (sender_psid, received_postback) => {
  // ---------------------------- PROMO_1 ---------------------------------
     else if (payload == "PROMO_1") {
       console.log("----- PROMO 1 WORKING -----")
-      user.getUserData1(sender_psid, result => {
+      user.getUserData(sender_psid, result => {
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
@@ -444,6 +450,23 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
 
 
+  var getUserData = (sender_psid, callback) => {
+    request(
+      {
+        uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
+        qs: {
+          fields: "picture.width(300),first_name,last_name",
+          access_token: config.ACCESS_TOKEN
+        },
+        method: "GET"
+      },
+      (err, res, body) => {
+        if (!err) {
+          callback(body);
+        }
+      }
+    );
+  };
 
 
 
