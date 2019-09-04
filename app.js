@@ -408,13 +408,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
-    con.query("SELECT * FROM shout_users WHERE MessengerId = ?", [sender_psid], 
-    (error, result) => {
-      if (error) throw err;
-      if (result.length == 0) {
-        getUserData(sender_psid, result => {
-          const user = JSON.parse(result);
-          con.query(
+    con.query(
             "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [
               "SHOUT",
@@ -428,9 +422,6 @@ var handleQuickReply = (sender_psid, received_postback) => {
             ]
           )
           console.log("SAVED TO DATABASE")
-        })
-        }
-      })
 
     user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
