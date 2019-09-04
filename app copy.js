@@ -411,17 +411,13 @@ var handleQuickReply = (sender_psid, received_postback) => {
     user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
 
-    con.query("SELECT * FROM rfc_apply WHERE user_id = ?",
+    con.query("SELECT gender FROM rfc_apply WHERE user_id = ?",
     [sender_psid],   
-    (error, result) => {
-      if (error){
     con.query(
       "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       ["SHOUT", sender_psid, user.picture.data.url, user.first_name, user.last_name, moment().format("YYYY/MM/DD HH:mm:ss"), moment().format("YYYY/MM/DD HH:mm:ss"), action]
     )
-    }
-   }
-  )
+    )
     console.log("SAVED TO DATABASE")
 
 
