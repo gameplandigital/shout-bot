@@ -604,7 +604,7 @@ app.post("/webhook", (req, res) => {
       senderAction(sender_psid, "mark_seen");
 
       if (webhook_event.message) {
-        // handleMessage(sender_psid, webhook_event.message);
+          handleMessage(sender_psid, webhook_event.message);
         if (webhook_event.message.quick_reply) {
           handleQuickReply(sender_psid, webhook_event.message.quick_reply);
         } else if (webhook_event.message.attachments) {
