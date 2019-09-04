@@ -100,9 +100,6 @@ var getUserData = (sender_psid, callback) => {
          } else if (action === "MENU_INTERNATIONAL_SHIPPING_DOC") {
            tag = { IntlTag: action };
            hasTag = true;
-         } else if (action === "MENU_INTERNATIONAL_SHIPPING_NODOC") {
-           tag = { IntlTag: action };
-           hasTag = true;
          }
 
          con.query(
