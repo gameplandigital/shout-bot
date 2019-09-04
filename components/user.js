@@ -36,6 +36,7 @@ var getUserData = (sender_psid, callback) => {
        if (error) throw err;
        if (result.length == 0) {
          getUserData(sender_psid, result => {
+          console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
            const user = JSON.parse(result);
            con.query(
              "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
