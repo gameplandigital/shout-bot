@@ -11,6 +11,8 @@ const express = require("express"),
   mysql = require("mysql");
   
   let app = express();
+
+  let con = conn.connection;
   
 
 //View Engine
