@@ -295,13 +295,13 @@ function handleAddress(sender_psid, received_message){
 
 
 
-  
-// ------- SAVE ACTION TO DATABASE ------- //
-  user.saveUser(sender_psid, payload, result => {
-    if (result.success) {
-      console.log(`Messenger ID ${sender_psid} action saved to the database.`);
-        }
-      });
+
+// // ------- SAVE ACTION TO DATABASE ------- //
+//   user.saveUser(sender_psid, payload, result => {
+//     if (result.success) {
+//       console.log(`Messenger ID ${sender_psid} action saved to the database.`);
+//         }
+//       });
 
 
 }
