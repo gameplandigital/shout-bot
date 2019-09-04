@@ -205,7 +205,6 @@ var handleMessage = (sender_psid, received_message) => {
 
 };
 
-
 function promo1(sender_psid){
   let response;
     console.log("----- PROMO 1 WORKING -----")
@@ -261,9 +260,6 @@ function promo1(sender_psid){
       });
     
 }
-
-
-
 
 
 
@@ -353,9 +349,6 @@ var handlePostback = (sender_psid, received_postback) => {
     };
 
 
-
-
-
 var handleQuickReply = (sender_psid, received_postback) => {
   let response;
 
@@ -363,16 +356,16 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
   if (payload === "QR_USER_AGREE") {
     user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-      "Hi! " +
-      user.first_name +
-      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
-    };
-    callSendAPI(sender_psid, response);
-  });
+      const user = JSON.parse(result);
+      senderAction(sender_psid, "typing_on");
+        response = {
+          text:
+          "Hi! " +
+          user.first_name +
+          " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
+        };
+        callSendAPI(sender_psid, response);
+      });
 
     senderAction(sender_psid, "typing_on");
     response = {
