@@ -12,7 +12,9 @@ moment.tz.setDefault("Asia/Manila");
 var getUserData = (sender_psid, callback) => {
   request(
     {
-      uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
+      // `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`
+      // `https://graph.facebook.com/2681715688519439?fields=first_name,last_name,profile_pic&access_token=EAAMwzBYw9tUBAFiuwZBtXFRTsZA49hXoa33i4fqL2wlnq6d8hsPgdQwxla0vgBFQkaPf6yBABCueBcxgttwpf8G3yOppr4SVJBaFXqyvYf7mRAI0I51ZBf9MNP1bCQ9ZCCjoQSwH2CGn1h3qtDiUVqbvEEZA1XSOuungF7ZAvALAZDZD`
+      uri: `https://graph.facebook.com/2681715688519439?fields=first_name,last_name,profile_pic&access_token=EAAMwzBYw9tUBAFiuwZBtXFRTsZA49hXoa33i4fqL2wlnq6d8hsPgdQwxla0vgBFQkaPf6yBABCueBcxgttwpf8G3yOppr4SVJBaFXqyvYf7mRAI0I51ZBf9MNP1bCQ9ZCCjoQSwH2CGn1h3qtDiUVqbvEEZA1XSOuungF7ZAvALAZDZD`      ,
       qs: {
         fields: "picture.width(300),first_name,last_name",
         access_token: config.ACCESS_TOKEN
@@ -159,31 +161,8 @@ var getBranches = (latitude, longitude, callback) => {
   );
 };
 
-
-moment.tz.setDefault("Asia/Manila");
-
-var getUserData1 = (sender_psid, callback) => {
-  request(
-    {
-      uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
-      qs: {
-        fields: "picture.width(300),first_name,last_name",
-        access_token: config.ACCESS_TOKEN
-      },
-      method: "GET"
-    },
-    (err, res, body) => {
-      if (!err) {
-        callback(body);
-      }
-    }
-  );
-};
-
-
 module.exports = {
   getUserData,
   saveUser,
   getBranches,
-  getUserData1
 };
