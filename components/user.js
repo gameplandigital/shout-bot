@@ -29,7 +29,7 @@ var getUserData = (sender_psid, callback) => {
 
  var saveUser = (sender_psid, action, callback) => {
    con.query(
-     "SELECT * FROM air21_users WHERE MessengerId = ?",
+     "SELECT * FROM shout_users WHERE MessengerId = ?",
      [sender_psid],
      (error, result) => {
        if (error) throw err;
@@ -37,9 +37,9 @@ var getUserData = (sender_psid, callback) => {
          getUserData(sender_psid, result => {
            const user = JSON.parse(result);
            con.query(
-             "INSERT INTO air21_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+             "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
              [
-               "AIR21",
+               "SHOUT",
                sender_psid,
                user.picture.data.url,
                user.first_name,
@@ -106,11 +106,11 @@ var getUserData = (sender_psid, callback) => {
          }
 
          con.query(
-           "UPDATE air21_users SET LastActive = ?, LastClicked = ? WHERE BotTag = ? AND MessengerId = ?",
+           "UPDATE shout_users SET LastActive = ?, LastClicked = ? WHERE BotTag = ? AND MessengerId = ?",
            [
              moment().format("YYYY/MM/DD HH:mm:ss"),
              action,
-             "AIR21",
+             "SHOUT",
              sender_psid
            ],
            (error2, result2) => {
@@ -125,8 +125,8 @@ var getUserData = (sender_psid, callback) => {
 
          if (hasTag) {
            con.query(
-             "UPDATE air21_users SET ? WHERE BotTag = ? AND MessengerId = ?",
-             [tag, "AIR21", sender_psid],
+             "UPDATE shout_users SET ? WHERE BotTag = ? AND MessengerId = ?",
+             [tag, "SHOUT", sender_psid],
              (error2, result2) => {
                if (error2) throw error2;
                if (result2.affectedRows > 0) {
