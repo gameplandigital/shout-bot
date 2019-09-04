@@ -31,29 +31,6 @@ getConnection.connect(function(err) {
 });
 
 
-//GETTING INFO FROM FB
-moment.tz.setDefault("Asia/Manila");
-
-var getUserData1 = (sender_psid, callback) => {
-  request(
-    {
-      uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
-      qs: {
-        fields: "picture.width(300),first_name,last_name",
-        access_token: config.ACCESS_TOKEN
-      },
-      method: "GET"
-    },
-    (err, res, body) => {
-      if (!err) {
-        callback(body);
-      }
-    }
-  );
-};
-
-
-
 //View Engine
 app.set("view engine", "ejs");
 app.set("public", path.join(__dirname, "public"));
