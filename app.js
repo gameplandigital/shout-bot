@@ -357,54 +357,26 @@ var handleQuickReply = (sender_psid, received_postback) => {
   if (payload === "QR_USER_AGREE") {
     user.getUserData(sender_psid, result => {
       const user = JSON.parse(result);
-      senderAction(sender_psid, "typing_on");
-        response = {
-          text:
-          "Hi! " +
-          user.first_name +
-          " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
-        };
-        callSendAPI(sender_psid, response);
+      response = {
+            text :       
+             "Hi There! 👋" +
+               user.first_name +
+               "\n\nReady to apply for a loan now?",
+            quick_replies : [
+              {
+                content_type: "text",
+                title: "Lets go! 👍",
+                payload: "NAME_NO"                                
+              },
+              {
+                content_type: "text",
+                title: "Maybe Later! 👎",
+                payload: "MENU_MAIN_MENU"                                
+              }
+            ]
+       }
+      callSendAPI(sender_psid, response);
       });
-
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Promo 1",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/1.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_1"
-                }
-              ]
-            },
-            {
-              title: "Promo 2",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/2.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_2"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
    }
 
   else if (payload === "MENU_MAIN_MENU") {
