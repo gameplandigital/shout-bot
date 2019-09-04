@@ -24,13 +24,11 @@ var getConnection =  mysql.createConnection({
   multipleStatements: true
 });
 
+
 getConnection.connect(function(err) {
   if (err) throw err;
   console.log("MySQL Connected! to shout_db");
 });
-
-
-getConnection.connect();
 
 
 //GETTING INFO FROM FB
