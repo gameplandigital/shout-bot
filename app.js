@@ -289,6 +289,11 @@ var handlePostback = (sender_psid, received_postback) => {
         };
         callSendAPI(sender_psid, response);
       }, 1000);
+      user.saveUser(sender_psid, "QR_USER_AGREE", result => {
+        if (result.success) { 
+          console.log(`Messenger ID ${sender_psid} action saved to the database.`);
+         }
+        });  
     }
 
  // ---------------------------- PROMO_1 ---------------------------------
@@ -345,16 +350,6 @@ var handlePostback = (sender_psid, received_postback) => {
         }, 2000);
         });
       }
-
-
-
-
-
-    user.saveUser(sender_psid, "QR_USER_AGREE", result => {
-      if (result.success) { 
-        console.log(`Messenger ID ${sender_psid} action saved to the database.`);
-       }
-      });
 
 
   user.saveUser(sender_psid, payload, result => {
