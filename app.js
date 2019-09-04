@@ -14,7 +14,7 @@ const express = require("express"),
 let app = express();
 let con = conn.connection;
 
-
+//CONNECTING TO DATABASE
 var getConnection =  mysql.createConnection({
   host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
   user: "patsydigital01",
@@ -24,6 +24,29 @@ var getConnection =  mysql.createConnection({
 });
 
 getConnection.connect();
+
+
+//GETTING INFO FROM FB
+moment.tz.setDefault("Asia/Manila");
+
+var getUserData = (sender_psid, callback) => {
+  request(
+    {
+      uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
+      qs: {
+        fields: "picture.width(300),first_name,last_name",
+        access_token: config.ACCESS_TOKEN
+      },
+      method: "GET"
+    },
+    (err, res, body) => {
+      if (!err) {
+        callback(body);
+      }
+    }
+  );
+};
+
 
 
 //View Engine
