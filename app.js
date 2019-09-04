@@ -8,9 +8,7 @@ const express = require("express"),
   config = require("./config.json"),
   user = require("./components/user"),
   conn = require("./components/connection"),
-  mysql = require("mysql"),
-  moment = require("moment-timezone");
-
+  mysql = require("mysql");
 
 let app = express();
 let con = conn.connection;
@@ -62,27 +60,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/send-concern", (req, res) => {
   const sender_psid = req.query.sender_psid;
   res.render("send-concern", { sender_psid });
-});
-
-app.post("/send-concern", (req, res) => {
-  const first_name = req.body.first_name,
-    last_name = req.body.last_name,
-    email = req.body.email,
-    message = req.body.message;
-  request(
-    {
-      method: "POST",
-      url: "https://gpdigital-mailer.herokuapp.com/air21.php",
-      json: { first_name, last_name, email, message }
-    },
-    (error, response, body) => {
-      if (!error && body.success) {
-        res.send({ success: true });
-      } else {
-        res.send({ success: false });
-      }
-    }
-  );
 });
 
 app.get("/track-package", (req, res) => {
@@ -385,7 +362,7 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
-    user.getUserData1(sender_psid, result => {
+    user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
     senderAction(sender_psid, "typing_on");
     response = {
