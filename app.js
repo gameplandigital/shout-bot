@@ -194,11 +194,49 @@ var handleMessage = (sender_psid, received_message) => {
   let response;
 
   if (received_message.text === "0001") {
+    console.log("____WORKING_________")
+    setTimeout(function(){     
+      senderAction(sender_psid, "typing_on");
+      response = {   
+        text: "🎉 CONGRATULATIONS!! 🎉"
+      }
+      callSendAPI(sender_psid, response);
+    }, 2000);
 
-    senderAction(sender_psid, "typing_on");
+    setTimeout(function(){     
+      senderAction(sender_psid, "typing_on");
+      response = {   
+        text: "You just won your first promo " + user.name + "!!"
+      }
+      callSendAPI(sender_psid, response);
+    }, 2300);
+    console.log("____WORKING_________")
+
+     senderAction(sender_psid, "typing_on");
+     response = {
+       attachment: {
+         type: "template",
+         payload: {
+            template_type: "media",
+            elements: [
+               {
+                 media_type: "image",
+                 url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
+                 buttons: [
+                   {
+                      type: "web_url",
+                      url: "www.google.com",
+                      title: "Claim promo",
+                   }
+                ]              
+               }
+            ]
+         }
+       }           
+     };
+     callSendAPI(sender_psid, response);
   }
 
-  callSendAPI(sender_psid, response);
 };
 
 // FUNCTION THAT HANDLE POSTBACKS
@@ -266,7 +304,6 @@ var handlePostback = (sender_psid, received_postback) => {
            }           
          };
          callSendAPI(sender_psid, response);
-
       }
 
 
