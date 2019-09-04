@@ -6,9 +6,25 @@ const express = require("express"),
   path = require("path"),
   cors = require("cors"),
   config = require("./config.json"),
-  user = require("./components/user");
+  user = require("./components/user"),
+  conn = require("./components/connection"),
+  mysql = require("mysql");
+
 
 let app = express();
+let con = conn.connection;
+
+
+var getConnection =  mysql.createConnection({
+  host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
+  user: "patsydigital01",
+  password: "pAtsy06072018",
+  database: "patsy_db",
+  multipleStatements: true
+});
+
+getConnection.connect();
+
 
 //View Engine
 app.set("view engine", "ejs");
@@ -275,6 +291,31 @@ var handlePostback = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
+
+  con.query("SELECT * FROM shout_users WHERE MessengerId = ?", [sender_psid], 
+    (error, result) => {
+      if (error) throw err;
+      if (result.length == 0) {
+        getUserData(sender_psid, result => {
+          const user = JSON.parse(result);
+          con.query(
+            "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+              "SHOUT",
+              sender_psid,
+              user.picture.data.url,
+              user.first_name,
+              user.last_name,
+              moment().format("YYYY/MM/DD HH:mm:ss"),
+              moment().format("YYYY/MM/DD HH:mm:ss"),
+              action
+            ]
+          )
+          console.log("SAVED TO DATABASE")
+        })
+        }
+      })
+
       setTimeout(function() {
         senderAction(sender_psid, "typing_on");
         response = {
@@ -289,11 +330,6 @@ var handlePostback = (sender_psid, received_postback) => {
         };
         callSendAPI(sender_psid, response);
       }, 1000);
-      user.saveUser(sender_psid, "QR_USER_AGREE", result => {
-        if (result.success) { 
-          console.log(`Messenger ID ${sender_psid} action saved to the database.`);
-         }
-        });  
     }
 
  // ---------------------------- PROMO_1 ---------------------------------
