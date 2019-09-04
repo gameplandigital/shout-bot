@@ -20,7 +20,7 @@ var getConnection =  mysql.createConnection({
   host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
   user: "patsydigital01",
   password: "pAtsy06072018",
-  database: "patsy_db",
+  database: "shout_db",
   multipleStatements: true
 });
 
