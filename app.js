@@ -34,7 +34,7 @@ getConnection.connect(function(err) {
 //GETTING INFO FROM FB
 moment.tz.setDefault("Asia/Manila");
 
-var getUserData = (sender_psid, callback) => {
+var getUserData1 = (sender_psid, callback) => {
   request(
     {
       uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
@@ -255,7 +255,7 @@ var handleMessage = (sender_psid, received_message) => {
 function promo1(sender_psid){
   let response;
     console.log("----- PROMO 1 WORKING -----")
-    user.getUserData(sender_psid, result => {
+    user.getUserData1(sender_psid, result => {
     const user = JSON.parse(result);
       senderAction(sender_psid, "typing_on");
         response = {   
@@ -338,7 +338,7 @@ var handlePostback = (sender_psid, received_postback) => {
  // ---------------------------- PROMO_1 ---------------------------------
     else if (payload == "PROMO_1") {
       console.log("----- PROMO 1 WORKING -----")
-      user.getUserData(sender_psid, result => {
+      user.getUserData1(sender_psid, result => {
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
@@ -408,23 +408,8 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
-    user.getUserData(sender_psid, result => {
+    user.getUserData1(sender_psid, result => {
     const user = JSON.parse(result);
-
-  //   con.query("SELECT * FROM rfc_apply WHERE user_id = ?",
-  //   [sender_psid],   
-  //   (error, result) => {
-  //     if (error){
-  //   con.query(
-  //     "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-  //     ["SHOUT", sender_psid, user.picture.data.url, user.first_name, user.last_name, moment().format("YYYY/MM/DD HH:mm:ss"), moment().format("YYYY/MM/DD HH:mm:ss"), action]
-  //   )
-  //   }
-  //  }
-  // )
-    console.log("SAVED TO DATABASE")
-
-
     senderAction(sender_psid, "typing_on");
     response = {
       text:
