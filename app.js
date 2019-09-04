@@ -279,20 +279,22 @@ function handleAddress(sender_psid, received_message){
               payload: "QR_USER_AGREE"
             }
           ]
-      };
-      callSendAPI(sender_psid, response);
-    }, 1000);
-
+        };
+        callSendAPI(sender_psid, response);
+      }, 1000);
+    });
     user.saveUser(sender_psid, "QR_USER_AGREE", result => {
       if (result.success) {
         console.log(
           `Messenger ID ${sender_psid} action saved to the database.`
         );
       }
-    });
-
    });
-  };
+  }
+
+
+
+
   
 // ------- SAVE ACTION TO DATABASE ------- //
   user.saveUser(sender_psid, payload, result => {
