@@ -11,19 +11,7 @@ const express = require("express"),
   mysql = require("mysql");
   
   let app = express();
-
-  let con = conn.connection;
-
-const Busboy = require('busboy');
-
-const  AWS = require('aws-sdk');
-const fileUpload = require('express-fileupload');
-app.use(fileUpload());
-
-
-
   
-
 
 //View Engine
 app.set("view engine", "ejs");
