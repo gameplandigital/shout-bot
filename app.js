@@ -24,6 +24,12 @@ var getConnection =  mysql.createConnection({
   multipleStatements: true
 });
 
+getConnection.connect(function(err) {
+  if (err) throw err;
+  console.log("MySQL Connected! to shout_db");
+});
+
+
 getConnection.connect();
 
 
@@ -315,31 +321,6 @@ var handlePostback = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "GET_STARTED") {
-
-  con.query("SELECT * FROM shout_users WHERE MessengerId = ?", [sender_psid], 
-    (error, result) => {
-      if (error) throw err;
-      if (result.length == 0) {
-        getUserData(sender_psid, result => {
-          const user = JSON.parse(result);
-          con.query(
-            "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-              "SHOUT",
-              sender_psid,
-              user.picture.data.url,
-              user.first_name,
-              user.last_name,
-              moment().format("YYYY/MM/DD HH:mm:ss"),
-              moment().format("YYYY/MM/DD HH:mm:ss"),
-              action
-            ]
-          )
-          console.log("SAVED TO DATABASE")
-        })
-        }
-      })
-
       setTimeout(function() {
         senderAction(sender_psid, "typing_on");
         response = {
@@ -429,6 +410,30 @@ var handleQuickReply = (sender_psid, received_postback) => {
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
+    con.query("SELECT * FROM shout_users WHERE MessengerId = ?", [sender_psid], 
+    (error, result) => {
+      if (error) throw err;
+      if (result.length == 0) {
+        getUserData(sender_psid, result => {
+          const user = JSON.parse(result);
+          con.query(
+            "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+              "SHOUT",
+              sender_psid,
+              user.picture.data.url,
+              user.first_name,
+              user.last_name,
+              moment().format("YYYY/MM/DD HH:mm:ss"),
+              moment().format("YYYY/MM/DD HH:mm:ss"),
+              action
+            ]
+          )
+          console.log("SAVED TO DATABASE")
+        })
+        }
+      })
+
     user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
     senderAction(sender_psid, "typing_on");
