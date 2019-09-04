@@ -266,8 +266,8 @@ function handleAddress(sender_psid, received_message){
 
 
   if (payload === "GET_STARTED") {
-    user.getUserData(sender_psid, result => {
-      const user = JSON.parse(result);
+    // user.getUserData(sender_psid, result => {
+    //   const user = JSON.parse(result);
       setTimeout(function() {
       senderAction(sender_psid, "typing_on");
       response = {
@@ -291,7 +291,7 @@ function handleAddress(sender_psid, received_message){
       }
     });
 
-  });
+  // });
 
 
 // ------- SAVE ACTION TO DATABASE ------- //
