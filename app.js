@@ -192,9 +192,27 @@ var callSendAPI = (sender_psid, response) => {
 // FUNCTION THAT HANDLE MESSAGES
 var handleMessage = (sender_psid, received_message) => {
   let response;
+  var user_input = received_message.text;
 
-  if (received_message.text === "0001") {
-    console.log("____WORKING_________")
+  if (user_input){
+    switch (user_input){
+      case '0001':
+        promo1(sender_psid);
+        break;
+      case '0002':
+        promo2(sender_psid);
+        break;
+    }
+  }
+
+};
+
+
+function promo1(sender_psid){
+  let response;
+    
+  user.getUserData(sender_psid, result => {
+    const user = JSON.parse(result);
     setTimeout(function(){     
       senderAction(sender_psid, "typing_on");
       response = {   
@@ -235,9 +253,14 @@ var handleMessage = (sender_psid, received_message) => {
        }           
      };
      callSendAPI(sender_psid, response);
-  }
+  });
 
-};
+}
+
+
+
+
+
 
 // FUNCTION THAT HANDLE POSTBACKS
 var handlePostback = (sender_psid, received_postback) => {
