@@ -8,8 +8,12 @@ const express = require("express"),
   config = require("./config.json"),
   user = require("./components/user"),
   conn = require("./components/connection"),
-  mysql = require("mysql"),
+  mysql = require("mysql"),  
   moment = require("moment-timezone");
+  moment.tz.setDefault("Asia/Manila");
+
+
+  
 
 
 let app = express();
@@ -29,29 +33,6 @@ getConnection.connect(function(err) {
   if (err) throw err;
   console.log("MySQL Connected! to shout_db");
 });
-
-
-//GETTING INFO FROM FB
-moment.tz.setDefault("Asia/Manila");
-
-var getUserData = (sender_psid, callback) => {
-  request(
-    {
-      uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
-      qs: {
-        fields: "picture.width(300),first_name,last_name",
-        access_token: config.ACCESS_TOKEN
-      },
-      method: "GET"
-    },
-    (err, res, body) => {
-      if (!err) {
-        callback(body);
-      }
-    }
-  );
-};
-
 
 
 //View Engine
@@ -85,27 +66,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/send-concern", (req, res) => {
   const sender_psid = req.query.sender_psid;
   res.render("send-concern", { sender_psid });
-});
-
-app.post("/send-concern", (req, res) => {
-  const first_name = req.body.first_name,
-    last_name = req.body.last_name,
-    email = req.body.email,
-    message = req.body.message;
-  request(
-    {
-      method: "POST",
-      url: "https://gpdigital-mailer.herokuapp.com/air21.php",
-      json: { first_name, last_name, email, message }
-    },
-    (error, response, body) => {
-      if (!error && body.success) {
-        res.send({ success: true });
-      } else {
-        res.send({ success: false });
-      }
-    }
-  );
 });
 
 app.get("/track-package", (req, res) => {
@@ -251,7 +211,6 @@ var handleMessage = (sender_psid, received_message) => {
 
 };
 
-
 function promo1(sender_psid){
   let response;
     console.log("----- PROMO 1 WORKING -----")
@@ -307,9 +266,6 @@ function promo1(sender_psid){
       });
     
 }
-
-
-
 
 
 
@@ -399,9 +355,6 @@ var handlePostback = (sender_psid, received_postback) => {
     };
 
 
-
-
-
 var handleQuickReply = (sender_psid, received_postback) => {
   let response;
 
@@ -409,66 +362,27 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
   if (payload === "QR_USER_AGREE") {
     user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-
-    con.query("SELECT gender FROM rfc_apply WHERE user_id = ?",
-    [sender_psid],   
-    con.query(
-      "INSERT INTO shout_users (BotTag, MessengerId, Profile_pic, Fname, Lname, LastActive, FirstOptIn, LastClicked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      ["SHOUT", sender_psid, user.picture.data.url, user.first_name, user.last_name, moment().format("YYYY/MM/DD HH:mm:ss"), moment().format("YYYY/MM/DD HH:mm:ss"), action]
-    )
-    )
-    console.log("SAVED TO DATABASE")
-
-
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-      "Hi! " +
-      user.first_name +
-      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
-    };
-    callSendAPI(sender_psid, response);
-  });
-
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Promo 1",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/1.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_1"
-                }
-              ]
-            },
-            {
-              title: "Promo 2",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/2.png",
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_2"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
+      const user = JSON.parse(result);
+      response = {
+            text :       
+             "Hi There! 👋" +
+               user.first_name +
+               "\n\nReady to apply for a loan now?",
+            quick_replies : [
+              {
+                content_type: "text",
+                title: "Lets go! 👍",
+                payload: "NAME_NO"                                
+              },
+              {
+                content_type: "text",
+                title: "Maybe Later! 👎",
+                payload: "MENU_MAIN_MENU"                                
+              }
+            ]
+       }
+      callSendAPI(sender_psid, response);
+      });
    }
 
   else if (payload === "MENU_MAIN_MENU") {
@@ -536,6 +450,23 @@ var handleQuickReply = (sender_psid, received_postback) => {
 
 
 
+  var getUserData = (sender_psid, callback) => {
+    request(
+      {
+        uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
+        qs: {
+          fields: "picture.width(300),first_name,last_name",
+          access_token: config.ACCESS_TOKEN
+        },
+        method: "GET"
+      },
+      (err, res, body) => {
+        if (!err) {
+          callback(body);
+        }
+      }
+    );
+  };
 
 
 

@@ -8,31 +8,21 @@ const express = require("express"),
   config = require("./config.json"),
   user = require("./components/user"),
   conn = require("./components/connection"),
-  mysql = require("mysql"),  
-  moment = require("moment-timezone");
-  moment.tz.setDefault("Asia/Manila");
+  mysql = require("mysql");
+  
+  let app = express();
+
+  let con = conn.connection;
+
+const Busboy = require('busboy');
+
+const  AWS = require('aws-sdk');
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
 
 
   
-
-
-let app = express();
-let con = conn.connection;
-
-//CONNECTING TO DATABASE
-var getConnection =  mysql.createConnection({
-  host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
-  user: "patsydigital01",
-  password: "pAtsy06072018",
-  database: "shout_db",
-  multipleStatements: true
-});
-
-
-getConnection.connect(function(err) {
-  if (err) throw err;
-  console.log("MySQL Connected! to shout_db");
-});
 
 
 //View Engine
@@ -60,43 +50,34 @@ app.use(function(req, res, next) {
   next();
 });
 
+
 //Set Static Path
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "views")));
 
-app.get("/send-concern", (req, res) => {
+ app.get("/send-concern", (req, res) => {
   const sender_psid = req.query.sender_psid;
   res.render("send-concern", { sender_psid });
 });
 
-app.get("/track-package", (req, res) => {
+app.get("/marital-status", (req, res) => {
   const sender_psid = req.query.sender_psid;
-  res.render("track-package", { sender_psid });
+  res.render("marital-status", { sender_psid });
 });
 
-app.post("/track-package", (req, res) => {
-  const tracking_number = req.body.tracking_number;
-  request(
-    {
-      method: "GET",
-      url: "https://www.air21.ph/api.php",
-      qs: {
-        awb: tracking_number
-      }
-    },
-    (err, response, body) => {
-      if (!err) {
-        res.send({ success: true, data: body });
-      } else {
-        res.send({ success: false });
-      }
-    }
-  );
-});
+
+var getConnection =  mysql.createConnection({
+    host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
+    user: "patsydigital01",
+    password: "pAtsy06072018",
+    database: "patsy_db",
+    multipleStatements: true
+  });
+  
+  getConnection.connect();
 
 app.post("/save-action", (req, res) => {
-  const sender_psid = req.body.sender_psid,
-    payload = req.body.payload;
-
+  const { sender_psid, payload } = req.body;
   if (payload === "OPEN_SEND_CONCERN_SUCCESS") {
     const message = {
       text: "Thanks! We'll get back to you soon :)",
@@ -113,30 +94,39 @@ app.post("/save-action", (req, res) => {
 
   user.saveUser(sender_psid, payload, result => {
     if (result.success) {
-      res.send({ success: true });
+      res.status(200).send({ success: true });
     } else {
-      res.send({ success: false });
+      res.status(200).send({ success: false });
     }
   });
 });
 
-const mainMenu = {
-  persistent_menu: [
-    {
-      locale: "default",
-      composer_input_disabled: false,
-      call_to_actions: [
-        {
-          title: "Main Menu",
-          type: "postback",
-          payload: "MENU_MAIN_MENU"
-        }
-      ]
-    }
-  ]
-};
 
-var senderAction = (sender_psid, action) => {
+
+const SERVER_URL = "https://rfc-bot.herokuapp.com/"
+console.log(SERVER_URL)
+
+
+
+//MAIN MENU
+const mainMenu = {
+  "persistent_menu": [
+    {
+        "locale": "default",
+        "composer_input_disabled": false,
+        "call_to_actions": [
+            {
+                "type": "postback",
+                "title": "MAIN MENU",
+                "payload": "MENU_MAIN_MENU"
+            },
+        ]
+     }
+  ]
+ };
+ // END MAIN MENU
+
+ var senderAction = (sender_psid, action) => {
   let request_body = {
     recipient: {
       id: sender_psid
@@ -162,9 +152,9 @@ var senderAction = (sender_psid, action) => {
       }
     }
   );
-};
+ };
 
-var callSendAPI = (sender_psid, response) => {
+ var callSendAPI = (sender_psid, response) => {
   let request_body = {
     recipient: {
       id: sender_psid
@@ -191,10 +181,10 @@ var callSendAPI = (sender_psid, response) => {
       }
     }
   );
-};
+ };
 
-// FUNCTION THAT HANDLE MESSAGES
-var handleMessage = (sender_psid, received_message) => {
+ // FUNCTION THAT HANDLE MESSAGES
+ var handleMessage = (sender_psid, received_message) => {
   let response;
   var user_input = received_message.text;
 
@@ -210,6 +200,7 @@ var handleMessage = (sender_psid, received_message) => {
   }
 
 };
+
 
 function promo1(sender_psid){
   let response;
@@ -267,86 +258,53 @@ function promo1(sender_psid){
     
 }
 
+function handleAddress(sender_psid, received_message){
+  var user_input = received_message.text;
+
+  senderAction(sender_psid, "typing_on");
+  response = {
+    text: "!! INPUT !!" + user_input.text
+  }
+    callSendAPI(sender_psid, response);
+}
 
 
-// FUNCTION THAT HANDLE POSTBACKS
-var handlePostback = (sender_psid, received_postback) => {
+ // FUNCTION THAT HANDLE POSTBACKS
+ var handlePostback = (sender_psid, received_postback) => {
   let response;
   let payload = received_postback.payload;
 
+
   if (payload === "GET_STARTED") {
-      setTimeout(function() {
-        senderAction(sender_psid, "typing_on");
-        response = {
-          text: "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
-            quick_replies: [
-              {
-                content_type: "text",
-                title: "I Agree.",
-                payload: "QR_USER_AGREE"
-              }
-            ]
-        };
-        callSendAPI(sender_psid, response);
-      }, 1000);
-    }
-
- // ---------------------------- PROMO_1 ---------------------------------
-    else if (payload == "PROMO_1") {
-      console.log("----- PROMO 1 WORKING -----")
-      user.getUserData(sender_psid, result => {
+    user.getUserData(sender_psid, result => {
       const user = JSON.parse(result);
-        senderAction(sender_psid, "typing_on");
-          response = {   
-            text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉"
-          }
-        callSendAPI(sender_psid, response);
+      setTimeout(function() {
+      senderAction(sender_psid, "typing_on");
+      response = {
+        text: "Your accessing of the Aircast Shout Bot indicates your understanding, agreement to and acceptance of the Fullterms and Condition and Privacy Policy of the Aircast Shout Bot. ",
+          quick_replies: [
+            {
+              content_type: "text",
+              title: "I Agree.",
+              payload: "QR_USER_AGREE"
+            }
+          ]
+      };
+      callSendAPI(sender_psid, response);
+    }, 1000);
 
-      setTimeout(function(){     
-        senderAction(sender_psid, "typing_on");
-          response = {   
-            text: "You just won your first promo."
-          }
-        callSendAPI(sender_psid, response);
-      }, 1500);
-
-      setTimeout(function(){     
-        senderAction(sender_psid, "typing_on");
-          response = {   
-            text: "Click the card below to claim 👇"
-          }
-        callSendAPI(sender_psid, response);
-      }, 1800);
-
-      setTimeout(function(){     
-        senderAction(sender_psid, "typing_on");
-         response = {
-          attachment: {
-            type: "template",
-              payload: {
-              template_type: "media",
-                elements: [
-                   {
-                    media_type: "image",
-                    url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
-                    buttons: [
-                      {
-                        type: "web_url",
-                        url: "www.google.com",
-                        title: "Claim promo",
-                      }
-                    ]              
-                  }
-                ]
-              }
-            }           
-          };
-         callSendAPI(sender_psid, response);
-        }, 2000);
-        });
+    user.saveUser(sender_psid, "QR_USER_AGREE", result => {
+      if (result.success) {
+        console.log(
+          `Messenger ID ${sender_psid} action saved to the database.`
+        );
       }
+    });
+
+  });
 
 
+// ------- SAVE ACTION TO DATABASE ------- //
   user.saveUser(sender_psid, payload, result => {
     if (result.success) {
       console.log(`Messenger ID ${sender_psid} action saved to the database.`);
@@ -355,122 +313,41 @@ var handlePostback = (sender_psid, received_postback) => {
     };
 
 
-var handleQuickReply = (sender_psid, received_postback) => {
-  let response;
+}
 
+
+
+
+var handleQuickReply = (sender_psid, received_postback, received_message, callback) => {
+  let response;
   let payload = received_postback.payload;
 
   if (payload === "QR_USER_AGREE") {
-    user.getUserData(sender_psid, result => {
-      const user = JSON.parse(result);
-      response = {
-            text :       
-             "Hi There! 👋" +
-               user.first_name +
-               "\n\nReady to apply for a loan now?",
-            quick_replies : [
-              {
-                content_type: "text",
-                title: "Lets go! 👍",
-                payload: "NAME_NO"                                
-              },
-              {
-                content_type: "text",
-                title: "Maybe Later! 👎",
-                payload: "MENU_MAIN_MENU"                                
-              }
-            ]
-       }
-      callSendAPI(sender_psid, response);
-      });
-   }
-
-  else if (payload === "MENU_MAIN_MENU") {
     user.getUserData(sender_psid, result => {
     const user = JSON.parse(result);
     senderAction(sender_psid, "typing_on");
     response = {
       text:
-      "Hi! " + user.first_name + " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
-        };
-        callSendAPI(sender_psid, response);
-      });
-
-        senderAction(sender_psid, "typing_on");
-        response = {
-          attachment: {
-            type: "template",
-            payload: {
-              template_type: "generic",
-              elements: [
-                {
-                  title: "Promo 1",
-                  subtitle:
-                    "Participate to win the prize",
-                  image_url: config.APP_URL + "/images/1.png",
-                  buttons: [
-                    {
-                      type: "postback",
-                      title: "Let's go",
-                      payload: "PROMO_1"
-                    }
-                  ]
-                },
-                {
-                  title: "Promo 2",
-                  subtitle:
-                    "Participate to win the prize",
-                  image_url: config.APP_URL + "/images/2.png",
-                  buttons: [
-                    {
-                      type: "postback",
-                      title: "Let's go",
-                      payload: "PROMO_2"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        };
-        callSendAPI(sender_psid, response);
-
-  }
+      "Hi! " +
+      user.first_name +
+      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
+    };
+    callSendAPI(sender_psid, response);
+  });
 
 
-
-
-
+// ------- SAVE ACTION TO DATABASE ------- //
   user.saveUser(sender_psid, payload, result => {
     if (result.success) {
       console.log(`Messenger ID ${sender_psid} action saved to the database.`);
-    }
-  });
-};
-
-
-
-  var getUserData = (sender_psid, callback) => {
-    request(
-      {
-        uri: `https:graph.facebook.com/${config.GRAPH_VERSION}/${sender_psid}`,
-        qs: {
-          fields: "picture.width(300),first_name,last_name",
-          access_token: config.ACCESS_TOKEN
-        },
-        method: "GET"
-      },
-      (err, res, body) => {
-        if (!err) {
-          callback(body);
         }
-      }
-    );
+      });
+
   };
+}
 
 
-
-
+// --------------  TO SEND LOCATION -------------------------------
 var handleAttachments = (sender_psid, received_postback) => {
   let response;
   const type = received_postback[0].type;
@@ -478,36 +355,17 @@ var handleAttachments = (sender_psid, received_postback) => {
   if (type === "location") {
     const latitude = received_postback[0].payload.coordinates.lat,
       longitude = received_postback[0].payload.coordinates.long;
-    request(
-      {
-        method: "GET",
-        url: "https:maps.googleapis.com/maps/api/geocode/json",
-        qs: {
-          latlng: latitude + "," + longitude,
-          key: config.GOOGLE_KEY
-        }
-      },
-      (err, res, body) => {
-        if (!err) {
-          const results = body.results;
-          let loc = {
-            address: ""
-          };
 
           user.getBranches(latitude, longitude, result => {
-            let location = "";
-            for (var i = 0; i < result.length; i++) {
-              location +=
-                "Nearest Branch: " +
-                result[i].name +
-                "\nAddress: " +
-                result[i].address +
-                "\nDistance: " +
-                result[i].distance.toFixed(1) +
-                " km\n\n";
-            }
             response = {
-              text: location,
+              text:
+                "Nearest Branch: " +
+                result[0].name +
+                "\nAddress: " +
+                result[0].address +
+                "\nDistance: " +
+                result[0].distance.toFixed(1) +
+                " km",
               quick_replies: [
                 {
                   content_type: "text",
@@ -517,24 +375,9 @@ var handleAttachments = (sender_psid, received_postback) => {
               ]
             };
             callSendAPI(sender_psid, response);
-          });
-        } else {
-          response = {
-            text:
-              "Ops! Something went wrong finding the nearest Aircast for you. Try again later.",
-            quick_replies: [
-              {
-                content_type: "text",
-                title: "Back to Main Menu",
-                payload: "MENU_MAIN_MENU"
-              }
-            ]
-          };
-          callSendAPI(sender_psid, response);
-        }
+          }
+        );
       }
-    );
-  }
 };
 
 // CREATE THE PERSISTENT MENU
@@ -569,8 +412,10 @@ var getStarted = () => {
     whitelisted_domains: [
       config.APP_URL,
       "https://google.com",
-      "https://accounts.google.com"
-    ]
+      "https://accounts.google.com",
+      "https://rfc-bot.herokuapp.com/",
+      "https://patsy-official-dashboard.herokuapp.com/counter.php"
+        ]
   };
 
   request(
@@ -594,7 +439,6 @@ var getStarted = () => {
     }
   );
 };
-
 getStarted();
 
 // WEBHOOK END POINT
@@ -602,24 +446,22 @@ app.post("/webhook", (req, res) => {
   let body = req.body;
   if (body.object === "page") {
     body.entry.forEach(function(entry) {
-      console.log("ENTRY: " + JSON.stringify(entry));
-      console.log("ENTRY MESSAGING: " + JSON.stringify(entry.messaging));
       let webhook_event = entry.messaging[0];
       let sender_psid = webhook_event.sender.id;
-      console.log("Sender PSID:" + sender_psid);
-
       senderAction(sender_psid, "mark_seen");
 
-      if (webhook_event.message) {
+        if (webhook_event.message) {
           handleMessage(sender_psid, webhook_event.message);
         if (webhook_event.message.quick_reply) {
           handleQuickReply(sender_psid, webhook_event.message.quick_reply);
         } else if (webhook_event.message.attachments) {
           handleAttachments(sender_psid, webhook_event.message.attachments);
         }
-      } else if (webhook_event.postback) {
+        } else if (webhook_event.postback) {
         handlePostback(sender_psid, webhook_event.postback);
-      }
+        } else if (webhook_event.postback) {
+        handleAddress(sender_psid, webhook_event.message);
+        }
     });
     res.send("EVENT_RECEIVED");
   } else {
@@ -639,13 +481,14 @@ app.get("/webhook", (req, res) => {
     if (mode == "subscribe" && token == VERIFY_TOKEN) {
       console.log("WEBHOOK_VERIFIED");
       res.send(challenge);
+      res.status(200).send(challenge);
     }
   } else {
     res.sendStatus(404);
   }
 });
 
-app.listen(process.env.PORT || 1101, () => {
+app.listen(process.env.PORT || 1337, () => {
   console.log("Server is now running.");
 });
 
@@ -653,3 +496,6 @@ app.get("/", function(req, res){
     res.send("WEBHOOK WORKING")
 });
 
+app.get("/name", function(req, res){
+  res.render("views/name");
+});
