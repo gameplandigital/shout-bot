@@ -60,7 +60,7 @@ var getConnection =  mysql.createConnection({
     host: "patsydb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com",
     user: "patsydigital01",
     password: "pAtsy06072018",
-    database: "patsy_db",
+    database: "shout_db",
     multipleStatements: true
   });
   
@@ -321,10 +321,56 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       text:
       "Hi! " +
       user.first_name +
-      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below so we can proceed 😉",
+      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below or enter the AIRCAST I.D so we can proceed 😉",
     };
     callSendAPI(sender_psid, response);
+
+
+    senderAction(sender_psid, "typing_on");
+    response = {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [
+            {
+              title: "Promo 1",
+              subtitle:
+                "Participate to win the prize",
+              image_url: config.APP_URL + "/images/1.png",
+              buttons: [
+                {
+                  type: "postback",
+                  title: "Let's go",
+                  payload: "PROMO_1"
+                }
+              ]
+            },
+            {
+              title: "Promo 2",
+              subtitle:
+                "Participate to win the prize",
+              image_url: config.APP_URL + "/images/2.png",
+              buttons: [
+                {
+                  type: "postback",
+                  title: "Let's go",
+                  payload: "PROMO_2"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    };
+    callSendAPI(sender_psid, response);
+
   });
+
+  }
+
+
+
 
 
 // ------- SAVE ACTION TO DATABASE ------- //
@@ -333,8 +379,6 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       console.log(`Messenger ID ${sender_psid} action saved to the database.`);
         }
       });
-
-  };
 }
 
 
