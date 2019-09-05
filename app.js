@@ -348,10 +348,10 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                   ]
                 },
                 {
-                  title: "Promo 2",
+                  title: "BRRR CAN PARA SA BER MONTHS",
                   subtitle:
-                    "Want A Limited Edition Keychain?",
-                  image_url: config.APP_URL + "/images/2.png",
+                    "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
+                  image_url: config.APP_URL + "/images/4.png",
                   buttons: [
                     {
                       type: "postback",
@@ -380,14 +380,14 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
     const user = JSON.parse(result);
       senderAction(sender_psid, "typing_on");
         response = {   
-          text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉"
+          text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉 \n\nYou just won your first promo."
         }
       callSendAPI(sender_psid, response);
 
       setTimeout(function(){     
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "You just won your first promo."
+            text: "PROMO CODE : SHOUT_BR3R123"
           }
         callSendAPI(sender_psid, response);
       }, 1500);
@@ -395,7 +395,8 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
     setTimeout(function(){     
       senderAction(sender_psid, "typing_on");
         response = {   
-          text: "Click the card below to claim 👇"
+          text: 
+            "You may present this promo code at any McDonald's store to avail this offer."
         }
       callSendAPI(sender_psid, response);
     }, 1800);
@@ -411,13 +412,13 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                  {
                   media_type: "image",
                   url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
-                  buttons: [
-                    {
-                      type: "web_url",
-                      url: "www.google.com",
-                      title: "Claim promo",
-                    }
-                  ]              
+                  // buttons: [
+                  //   {
+                  //     type: "web_url",
+                  //     url: "www.google.com",
+                  //     title: "Claim promo",
+                  //   }
+                  // ]              
                 }
               ]
             }
