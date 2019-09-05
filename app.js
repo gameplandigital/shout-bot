@@ -334,9 +334,9 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
               template_type: "generic",
               elements: [
                 {
-                  title: "Promo 1",
+                  title: "Claim Free Mcdo Fries",
                   subtitle:
-                    "Claim Free Mcdo Fries",
+                    "Claim Your Free World Famous Fries",
                   image_url: config.APP_URL + "/images/3.png",
                   buttons: 
                   [
