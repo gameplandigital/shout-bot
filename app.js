@@ -196,55 +196,56 @@ function promo1(sender_psid){
   let response;
     console.log("----- PROMO 1 WORKING -----")
     user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-      senderAction(sender_psid, "typing_on");
-        response = {   
-          text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉"
-        }
-      callSendAPI(sender_psid, response);
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "🎉 CONGRATULATIONS" + user.firstname + "!! 🎉 \n\nYou just won your first promo."
+          }
+        callSendAPI(sender_psid, response);
 
-    setTimeout(function(){     
-      senderAction(sender_psid, "typing_on");
-        response = {   
-          text: "You just won your first promo."
-        }
-      callSendAPI(sender_psid, response);
-    }, 1500);
-
-    setTimeout(function(){     
-      senderAction(sender_psid, "typing_on");
-        response = {   
-          text: "Click the card below to claim 👇"
-        }
-      callSendAPI(sender_psid, response);
-    }, 1800);
-
-    setTimeout(function(){     
-      senderAction(sender_psid, "typing_on");
-       response = {
-        attachment: {
-          type: "template",
-            payload: {
-            template_type: "media",
-              elements: [
-                 {
-                  media_type: "image",
-                  url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
-                  buttons: [
-                    {
-                      type: "web_url",
-                      url: "www.google.com",
-                      title: "Claim promo",
-                    }
-                  ]              
-                }
-              ]
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SHOUT_BR3R123"
             }
-          }           
-        };
-       callSendAPI(sender_psid, response);
-      }, 2000);
-      });
+          callSendAPI(sender_psid, response);
+        }, 1500);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: 
+              "You may present this promo code at any McDonald's store to avail this offer."
+          }
+        callSendAPI(sender_psid, response);
+      }, 1800);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+              payload: {
+              template_type: "media",
+                elements: [
+                  {
+                    media_type: "image",
+                    url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",
+                    // buttons: [
+                    //   {
+                    //     type: "web_url",
+                    //     url: "www.google.com",
+                    //     title: "Claim promo",
+                    //   }
+                    // ]              
+                  }
+                ]
+              }
+            }           
+          };
+        callSendAPI(sender_psid, response);
+        }, 2000);
+        });
     
 }
 
@@ -295,11 +296,35 @@ function handleAddress(sender_psid, received_message){
 // ---------------------------- PROMO_1 ---------------------------------
   else if (payload == "PROMO_1") {
     console.log("----- PROMO 1 WORKING -----")
+
+    con.query("SELECT * FROM shout_claim WHERE user_id = ?",
+      [sender_psid],
+      (error, result) => {
+        if (error) throw err;
+        if (result.length == 0) {
+          getUserData(sender_psid, result => {
+           console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            const user = JSON.parse(result);
+            con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?,?)",
+              [
+                sender_psid,
+                user.picture.data.url,
+                user.first_name,
+                user.last_name,
+                "Mcdo free fries",
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+              ]
+            )
+          });
+        }}
+        )
+
       user.getUserData(sender_psid, result => {
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉 \n\nYou just won your first promo."
+            text: "🎉 CONGRATULATIONS" + user.firstname + "!! 🎉 \n\nYou just won your first promo."
           }
         callSendAPI(sender_psid, response);
 
@@ -330,7 +355,7 @@ function handleAddress(sender_psid, received_message){
                 elements: [
                   {
                     media_type: "image",
-                    url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
+                    url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",
                     // buttons: [
                     //   {
                     //     type: "web_url",
@@ -394,7 +419,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                     title: "Claim Free Mcdo Fries",
                     subtitle:
                       "Claim Your Free World Famous Fries",
-                    image_url: config.APP_URL + "/images/3.png",
+                    image_url: config.APP_URL + "/images/5.png",
                     buttons: 
                     [
                       {
