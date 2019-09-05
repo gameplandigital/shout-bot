@@ -292,6 +292,63 @@ function handleAddress(sender_psid, received_message){
    });
   }
 
+// ---------------------------- PROMO_1 ---------------------------------
+  else if (payload == "PROMO_1") {
+    console.log("----- PROMO 1 WORKING -----")
+      user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉 \n\nYou just won your first promo."
+          }
+        callSendAPI(sender_psid, response);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SHOUT_BR3R123"
+            }
+          callSendAPI(sender_psid, response);
+        }, 1500);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: 
+              "You may present this promo code at any McDonald's store to avail this offer."
+          }
+        callSendAPI(sender_psid, response);
+      }, 1800);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+              payload: {
+              template_type: "media",
+                elements: [
+                  {
+                    media_type: "image",
+                    url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
+                    // buttons: [
+                    //   {
+                    //     type: "web_url",
+                    //     url: "www.google.com",
+                    //     title: "Claim promo",
+                    //   }
+                    // ]              
+                  }
+                ]
+              }
+            }           
+          };
+        callSendAPI(sender_psid, response);
+        }, 2000);
+        });
+  }
+    
+
 
 
 
@@ -325,114 +382,52 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
         };
       callSendAPI(sender_psid, response);
 
-    setTimeout(function(){
-      senderAction(sender_psid, "typing_on");
-        response = {
-          attachment: {
-            type: "template",
-            payload: {
-              template_type: "generic",
-              elements: [
-                {
-                  title: "Claim Free Mcdo Fries",
-                  subtitle:
-                    "Claim Your Free World Famous Fries",
-                  image_url: config.APP_URL + "/images/3.png",
-                  buttons: 
-                  [
-                    {
-                      type: "postback",
-                      title: "CLAIM NOW!",
-                      payload: "PROMO_1"
-                    }
-                  ]
-                },
-                {
-                  title: "BRRR CAN PARA SA BER MONTHS",
-                  subtitle:
-                    "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
-                  image_url: config.APP_URL + "/images/4.png",
-                  buttons: [
-                    {
-                      type: "postback",
-                      title: "Let's go",
-                      payload: "PROMO_2"
-                    }
-                  ]
-                }
-              ]
+      setTimeout(function(){
+        senderAction(sender_psid, "typing_on");
+          response = {
+            attachment: {
+              type: "template",
+              payload: {
+                template_type: "generic",
+                elements: [
+                  {
+                    title: "Claim Free Mcdo Fries",
+                    subtitle:
+                      "Claim Your Free World Famous Fries",
+                    image_url: config.APP_URL + "/images/3.png",
+                    buttons: 
+                    [
+                      {
+                        type: "postback",
+                        title: "CLAIM NOW!",
+                        payload: "PROMO_1"
+                      }
+                    ]
+                  },
+                  {
+                    title: "BRRR CAN PARA SA BER MONTHS",
+                    subtitle:
+                      "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
+                    image_url: config.APP_URL + "/images/4.png",
+                    buttons: [
+                      {
+                        type: "postback",
+                        title: "Let's go",
+                        payload: "PROMO_2"
+                      }
+                    ]
+                  }
+                ]
+              }
             }
-          }
-        };
-      callSendAPI(sender_psid, response);
-    }, 1800);
+          };
+        callSendAPI(sender_psid, response);
+      }, 1800);
 
 
   });
 
   }
-
-
-   // ---------------------------- PROMO_1 ---------------------------------
-  else if (payload == "PROMO_1") {
-  console.log("----- PROMO 1 WORKING -----")
-    user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-      senderAction(sender_psid, "typing_on");
-        response = {   
-          text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉 \n\nYou just won your first promo."
-        }
-      callSendAPI(sender_psid, response);
-
-      setTimeout(function(){     
-        senderAction(sender_psid, "typing_on");
-          response = {   
-            text: "PROMO CODE : SHOUT_BR3R123"
-          }
-        callSendAPI(sender_psid, response);
-      }, 1500);
-
-    setTimeout(function(){     
-      senderAction(sender_psid, "typing_on");
-        response = {   
-          text: 
-            "You may present this promo code at any McDonald's store to avail this offer."
-        }
-      callSendAPI(sender_psid, response);
-    }, 1800);
-
-    setTimeout(function(){     
-      senderAction(sender_psid, "typing_on");
-       response = {
-        attachment: {
-          type: "template",
-            payload: {
-            template_type: "media",
-              elements: [
-                 {
-                  media_type: "image",
-                  url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
-                  // buttons: [
-                  //   {
-                  //     type: "web_url",
-                  //     url: "www.google.com",
-                  //     title: "Claim promo",
-                  //   }
-                  // ]              
-                }
-              ]
-            }
-          }           
-        };
-       callSendAPI(sender_psid, response);
-      }, 2000);
-      });
-  }
-
-
-
-
-
 
 // ------- SAVE ACTION TO DATABASE ------- //
   user.saveUser(sender_psid, payload, result => {
