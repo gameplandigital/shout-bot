@@ -8,7 +8,11 @@ const express = require("express"),
   config = require("./config.json"),
   user = require("./components/user"),
   conn = require("./components/connection"),
-  mysql = require("mysql");
+  mysql = require("mysql"),
+  moment = require("moment-timezone");
+
+  moment.tz.setDefault("Asia/Manila");
+
   
   let app = express();
 
