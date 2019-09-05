@@ -315,59 +315,119 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
 
   if (payload === "QR_USER_AGREE") {
     user.getUserData(sender_psid, result => {
-    const user = JSON.parse(result);
-    senderAction(sender_psid, "typing_on");
-    response = {
-      text:
-      "Hi! " +
-      user.first_name +
-      " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below or enter the AIRCAST I.D so we can proceed 😉",
-    };
-    callSendAPI(sender_psid, response);
+      const user = JSON.parse(result);
+      senderAction(sender_psid, "typing_on");
+        response = {
+          text:
+              "Hi! " +
+              user.first_name +
+              " 👋,\n\nWelcome!!.\nI am the Aircast shout bot. Choose the promo you want on the menu below or enter the AIRCAST I.D so we can proceed 😉",
+        };
+      callSendAPI(sender_psid, response);
 
-
-    senderAction(sender_psid, "typing_on");
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Promo 1",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/1.png",
-              buttons: [
+    setTimeout(function(){
+      senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
                 {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_1"
-                }
-              ]
-            },
-            {
-              title: "Promo 2",
-              subtitle:
-                "Participate to win the prize",
-              image_url: config.APP_URL + "/images/2.png",
-              buttons: [
+                  title: "Promo 1",
+                  subtitle:
+                    "Claim Free Mcdo Fries",
+                  image_url: config.APP_URL + "/images/3.png",
+                  buttons: 
+                  [
+                    {
+                      type: "postback",
+                      title: "CLAIM NOW!",
+                      payload: "PROMO_1"
+                    }
+                  ]
+                },
                 {
-                  type: "postback",
-                  title: "Let's go",
-                  payload: "PROMO_2"
+                  title: "Promo 2",
+                  subtitle:
+                    "Want A Limited Edition Keychain?",
+                  image_url: config.APP_URL + "/images/2.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Let's go",
+                      payload: "PROMO_2"
+                    }
+                  ]
                 }
               ]
             }
-          ]
-        }
-      }
-    };
-    callSendAPI(sender_psid, response);
+          }
+        };
+      callSendAPI(sender_psid, response);
+    }, 1800);
+
 
   });
 
   }
+
+
+   // ---------------------------- PROMO_1 ---------------------------------
+  else if (payload == "PROMO_1") {
+  console.log("----- PROMO 1 WORKING -----")
+    user.getUserData(sender_psid, result => {
+    const user = JSON.parse(result);
+      senderAction(sender_psid, "typing_on");
+        response = {   
+          text: "🎉 CONGRATULATIONS" + user.name + "!! 🎉"
+        }
+      callSendAPI(sender_psid, response);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "You just won your first promo."
+          }
+        callSendAPI(sender_psid, response);
+      }, 1500);
+
+    setTimeout(function(){     
+      senderAction(sender_psid, "typing_on");
+        response = {   
+          text: "Click the card below to claim 👇"
+        }
+      callSendAPI(sender_psid, response);
+    }, 1800);
+
+    setTimeout(function(){     
+      senderAction(sender_psid, "typing_on");
+       response = {
+        attachment: {
+          type: "template",
+            payload: {
+            template_type: "media",
+              elements: [
+                 {
+                  media_type: "image",
+                  url: "https://www.facebook.com/photo.php?fbid=450066978929263&set=a.450031398932821&type=3&theater",
+                  buttons: [
+                    {
+                      type: "web_url",
+                      url: "www.google.com",
+                      title: "Claim promo",
+                    }
+                  ]              
+                }
+              ]
+            }
+          }           
+        };
+       callSendAPI(sender_psid, response);
+      }, 2000);
+      });
+  }
+
 
 
 
