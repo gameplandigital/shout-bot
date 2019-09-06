@@ -513,7 +513,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                     ]
                   },
                   {
-                    title: "Locate other Aircast Shout",
+                    title: "Locate Other Aircast Shout",
                     subtitle:
                       "Find More Aircast Shout To Claim More Promos",
                     image_url: config.APP_URL + "/images/6.png",
@@ -677,8 +677,8 @@ var getStarted = () => {
       config.APP_URL,
       "https://google.com",
       "https://accounts.google.com",
-      "https://rfc-bot.herokuapp.com/",
-      "https://patsy-official-dashboard.herokuapp.com/counter.php"
+      "https://patsy-official-dashboard.herokuapp.com/counter.php",
+      "https://airshout-bot.herokuapp.com/"
         ]
   };
 
