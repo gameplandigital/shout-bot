@@ -257,7 +257,7 @@ function promo1(sender_psid){
           senderAction(sender_psid, "typing_on");
             response = {   
               text: 
-                "You may present this promo code at any McDonald's store to avail this offer."
+                "You may present this mobile voucher at any McDonald's store to avail this offer."
             }
           callSendAPI(sender_psid, response);
         }, 1800);
@@ -393,7 +393,7 @@ function handleAddress(sender_psid, received_message){
         senderAction(sender_psid, "typing_on");
           response = {   
             text: 
-              "You may present this promo code at any McDonald's store to avail this offer."
+              "You may present this mobile voucher at any McDonald's store to avail this offer."
           }
         callSendAPI(sender_psid, response);
       }, 1800);
