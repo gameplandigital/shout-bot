@@ -493,6 +493,19 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                         payload: "PROMO_2"
                       }
                     ]
+                  },
+                  {
+                    title: "Locate other Aircast Shout",
+                    subtitle:
+                      "Find More Aircast Shout To Claim More Promos",
+                    image_url: config.APP_URL + "/images/6.png",
+                    buttons: [
+                      {
+                        type: "postback",
+                        title: "Find Shout",
+                        payload: "LOCATE"
+                      }
+                    ]
                   }
                 ]
               }
@@ -501,7 +514,14 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
         callSendAPI(sender_psid, response);
       }, 1800);
 
-
+      setTimeout(function(){
+      senderAction(sender_psid, "typing_on");
+        response = {
+          text:"Or Enter Aircast Shout I.D so we can proceed 😉 (ex. 0001)",
+        };
+      callSendAPI(sender_psid, response);
+      }, 2000);
+        
   });
 
   }
