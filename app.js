@@ -456,7 +456,7 @@ function handleAddress(sender_psid, received_message){
                   title: "Claim Free Mcdo Fries",
                   subtitle:
                     "Claim Your Free World Famous Fries",
-                  image_url: config.APP_URL + "/images/6.png",
+                  image_url: config.APP_URL + "/images/5.png",
                   buttons: 
                   [
                     {
