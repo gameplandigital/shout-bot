@@ -467,7 +467,7 @@ function handleAddress(sender_psid, received_message){
                   ]
                 },
                 {
-                  title: "BRRR CAN PARA SA BER MONTHS",
+                  title: "Brrr Can Para Sa Ber Months",
                   subtitle:
                     "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
                   image_url: config.APP_URL + "/images/4.png",
@@ -483,7 +483,7 @@ function handleAddress(sender_psid, received_message){
                   title: "Locate other Aircast Shout",
                   subtitle:
                     "Find More Aircast Shout To Claim More Promos",
-                  image_url: config.APP_URL + "/images/6.png",
+                  image_url: config.APP_URL + "/images/1.png",
                   buttons: [
                     {
                       type: "postback",
