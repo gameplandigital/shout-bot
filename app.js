@@ -222,6 +222,17 @@ function promo1(sender_psid){
               )
             });
           } 
+          else {
+            user.getUserData(sender_psid, result => {
+               const user = JSON.parse(result);
+               con.query("UPDATE shout_claim SET last_claim = ? WHERE user_id = ?",
+                 [
+                  moment().format("YYYY/MM/DD HH:mm:ss"),
+                  sender_psid
+                 ]
+               )
+             });
+          };
          }
         )
   
@@ -349,8 +360,17 @@ function handleAddress(sender_psid, received_message){
               ]
             )
           });
-        }}
-        )
+        }
+        else {
+             con.query("UPDATE shout_claim SET last_claim = ? WHERE user_id = ?",
+               [
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                sender_psid
+               ]
+             )
+        };
+       }
+      )
 
       user.getUserData(sender_psid, result => {
       const user = JSON.parse(result);
