@@ -423,7 +423,24 @@ function handleAddress(sender_psid, received_message){
           };
         callSendAPI(sender_psid, response);
         }, 2000);
-        });
+        
+
+        setTimeout(function(){
+          senderAction(sender_psid, "typing_on");
+          response = {
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Back to Main Menu",
+                payload: "MENU_MAIN_MENU"
+              }
+            ]         
+          }
+          callSendAPI(sender_psid, response);
+          }, 2000);
+  
+
+      });
   }
     
 
@@ -524,6 +541,64 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       }, 2000);
         
   });
+
+  }
+
+  else if (payload === "MENU_MAIN_MENU"){
+    setTimeout(function(){
+      senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: "Claim Free Mcdo Fries",
+                  subtitle:
+                    "Claim Your Free World Famous Fries",
+                  image_url: config.APP_URL + "/images/5.png",
+                  buttons: 
+                  [
+                    {
+                      type: "postback",
+                      title: "CLAIM NOW!",
+                      payload: "PROMO_1"
+                    }
+                  ]
+                },
+                {
+                  title: "BRRR CAN PARA SA BER MONTHS",
+                  subtitle:
+                    "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
+                  image_url: config.APP_URL + "/images/4.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Let's go",
+                      payload: "PROMO_2"
+                    }
+                  ]
+                },
+                {
+                  title: "Locate other Aircast Shout",
+                  subtitle:
+                    "Find More Aircast Shout To Claim More Promos",
+                  image_url: config.APP_URL + "/images/6.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Find Shout",
+                      payload: "LOCATE"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        };
+      callSendAPI(sender_psid, response);
+    }, 1800);
 
   }
 
