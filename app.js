@@ -97,8 +97,8 @@ app.post("/save-action", (req, res) => {
 
 
 
-const SERVER_URL = "https://rfc-bot.herokuapp.com/"
-console.log(SERVER_URL)
+// const SERVER_URL = "https://rfc-bot.herokuapp.com/"
+// console.log(SERVER_URL)
 
 
 
@@ -208,20 +208,22 @@ function promo1(sender_psid){
             user.getUserData(sender_psid, result => {
              console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
               const user = JSON.parse(result);
-              con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?,?)",
+              con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, shout_location,promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?,?)",
                 [
                   sender_psid,
                   user.picture.data.url,
                   user.first_name,
                   user.last_name,
+                  "ID : 17 | Joe Test",
                   "Mcdo free fries",
                   moment().format("YYYY/MM/DD HH:mm:ss"),
                   moment().format("YYYY/MM/DD HH:mm:ss"),
                 ]
               )
             });
-          }}
-          )
+          } 
+         }
+        )
   
         user.getUserData(sender_psid, result => {
         const user = JSON.parse(result);
@@ -274,7 +276,9 @@ function promo1(sender_psid){
           callSendAPI(sender_psid, response);
           }, 2000);
           });
-    }
+    
+  };
+    
       
 
 function handleAddress(sender_psid, received_message){
