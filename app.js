@@ -208,7 +208,7 @@ function promo1(sender_psid){
             user.getUserData(sender_psid, result => {
              console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
               const user = JSON.parse(result);
-              con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, shout_location,promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?,?)",
+              con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, shout_location, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 [
                   sender_psid,
                   user.picture.data.url,
@@ -225,8 +225,9 @@ function promo1(sender_psid){
           else {
             user.getUserData(sender_psid, result => {
                const user = JSON.parse(result);
-               con.query("UPDATE shout_claim SET last_claim = ? WHERE user_id = ?",
+               con.query("UPDATE shout_claim SET shout_location = ?, last_claim = ? WHERE user_id = ?",
                  [
+                  "ID : 17 | Joe Test",
                   moment().format("YYYY/MM/DD HH:mm:ss"),
                   sender_psid
                  ]
@@ -240,7 +241,7 @@ function promo1(sender_psid){
         const user = JSON.parse(result);
           senderAction(sender_psid, "typing_on");
             response = {   
-              text: "🎉 CONGRATULATIONS" + user.firstname + "!! 🎉 \n\nYou just won your first promo."
+              text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou just won your first promo."
             }
           callSendAPI(sender_psid, response);
   
