@@ -349,14 +349,13 @@ function handleAddress(sender_psid, received_message){
           user.getUserData(sender_psid, result => {
            console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             const user = JSON.parse(result);
-            con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?,?)",
+            con.query("INSERT INTO shout_claim (user_id, user_profile_pic, user_fname, user_lname, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?, ?)",
               [
                 sender_psid,
                 user.picture.data.url,
                 user.first_name,
                 user.last_name,
                 "Mcdo free fries",
-                moment().format("YYYY/MM/DD HH:mm:ss"),
                 moment().format("YYYY/MM/DD HH:mm:ss"),
               ]
             )
@@ -442,7 +441,134 @@ function handleAddress(sender_psid, received_message){
 
       });
   }
-    
+  else if (payload == "PROMO_3") {
+    console.log("----- PROMO 3 WORKING -----")
+
+    con.query("SELECT * FROM shout_claim_selecta WHERE user_id = ?",
+      [sender_psid],
+      (error, result) => {
+        if (error) throw err;
+        if (result.length == 0) {
+          user.getUserData(sender_psid, result => {
+           console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            const user = JSON.parse(result);
+            con.query("INSERT INTO shout_claim_selecta (user_id, user_profile_pic, user_fname, user_lname, promo_claimed, first_claim) VALUES (?, ?, ?, ?, ?, ?)",
+              [
+                sender_psid,
+                user.picture.data.url,
+                user.first_name,
+                user.last_name,
+                "Mcdo free fries",
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+              ]
+            )
+          });
+        }
+        else {
+             con.query("UPDATE shout_claim_selecta SET last_claim = ? WHERE user_id = ?",
+               [
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                sender_psid
+               ]
+             )
+        };
+       }
+      )
+
+      user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "Hello" + user.firstname + "!! 👋  \n\nI Have A Question for you..."
+          }
+        callSendAPI(sender_psid, response);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SHOUT_BR3R123"
+            }
+          callSendAPI(sender_psid, response);
+        }, 1500);
+
+      setTimeout(function(){     
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "Which of this delicious flavors of the new Selecta Christmas Collection is your favorite?\n\nChoices:\n* Creamy Buko Pandan Espesyal\n* Delightful Choco Hazelnut Crinkles\n* Rich Ube Salted Egg con Quezo",
+            quick_replies:[
+              {
+                content_type:"text",
+                title:"Creamy Buko Pandan Espesyal",
+                payload:"selecta_1",
+                image_url:"http://example.com/img/red.png"
+              },
+              {
+                content_type:"text",
+                title:"Delightful Choco Hazelnut Crinkles",
+                payload:"selecta_2",
+                image_url:"http://example.com/img/green.png"
+              },
+              {
+                content_type:"text",
+                title:"Rich Ube Salted Egg con Quezo",
+                payload:"selecta_3",
+                image_url:"http://example.com/img/green.png"
+              }
+            ]          
+          }
+        callSendAPI(sender_psid, response);
+      }, 1800);
+
+      setTimeout(function(){
+        senderAction(sender_psid, "typing_on");
+        response = {
+          attachment: {
+            type: "template",
+              payload: {
+              template_type: "media",
+                elements: [
+                  {
+                    media_type: "image",
+                    url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",        
+                  }
+                ]
+              }
+            }           
+          };
+        callSendAPI(sender_psid, response);
+        }, 2000);
+        
+
+        setTimeout(function(){
+          senderAction(sender_psid, "typing_on");
+          response = {
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Back to Main Menu",
+                payload: "MENU_MAIN_MENU"
+              }
+            ]         
+          }
+          callSendAPI(sender_psid, response);
+          }, 2000);
+  
+
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   else if (payload === "MENU_MAIN_MENU"){
     setTimeout(function(){
       senderAction(sender_psid, "typing_on");
@@ -463,6 +589,19 @@ function handleAddress(sender_psid, received_message){
                       type: "postback",
                       title: "CLAIM NOW!",
                       payload: "PROMO_1"
+                    }
+                  ]
+                },
+                {
+                  title: "Want free Ice cream?",
+                  subtitle:
+                    "Just tap the game button and answer our short survey!",
+                  image_url: config.APP_URL + "/images/4.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "GAME 🍦",
+                      payload: "PROMO_3"
                     }
                   ]
                 },
@@ -557,6 +696,19 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                     ]
                   },
                   {
+                    title: "Want free Ice cream?",
+                    subtitle:
+                      "Just tap the game button and answer our short survey!",
+                    image_url: config.APP_URL + "/images/4.png",
+                    buttons: [
+                      {
+                        type: "postback",
+                        title: "GAME 🍦",
+                        payload: "PROMO_3"
+                      }
+                    ]
+                  },  
+                  {
                     title: "BRRR CAN PARA SA BER MONTHS",
                     subtitle:
                       "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
@@ -625,6 +777,19 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
                   ]
                 },
                 {
+                  title: "Want free Ice cream?",
+                  subtitle:
+                    "Just tap the game button and answer our short survey!",
+                  image_url: config.APP_URL + "/images/4.png",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "GAME 🍦",
+                      payload: "PROMO_3"
+                    }
+                  ]
+                },
+                {
                   title: "BRRR CAN PARA SA BER MONTHS",
                   subtitle:
                     "Want A Limited Edition San Miguel BRRR CAN? Answer the short survey to get your free limited edition BRRR CAN",
@@ -658,6 +823,285 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
     }, 1800);
 
   }
+
+  else if (payload == "selecta_1") {
+    console.log("----- selecta_1 WORKING -----")
+
+             con.query("UPDATE shout_claim_selecta SET last_claim = ? WHERE user_id = ?",
+               [
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                sender_psid
+               ]
+             )
+
+             con.query("UPDATE shout_claim_selecta SET option_1 = ? WHERE user_id = ?",
+             [
+              "1",
+              sender_psid
+             ]
+           )
+
+      
+
+      user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+          }
+        callSendAPI(sender_psid, response);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+          response = {
+            attachment: {
+              type: "template",
+                payload: {
+                template_type: "media",
+                  elements: [
+                    {
+                      media_type: "image",
+                      url: "https://www.facebook.com/selectaphilippines/photos/a.693188287391632/1985841474792967/?type=3&theater",            
+                    }
+                  ]
+                }
+              }           
+            };
+          callSendAPI(sender_psid, response);
+          }, 1500);
+
+        
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: 
+                "You may present this mobile voucher at any 7/11 store near you."
+            }
+          callSendAPI(sender_psid, response);
+        }, 1800);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SELECTA_SHOUT_1"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2000);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "Thank you for participating! 😊"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2100);
+
+        setTimeout(function(){
+          senderAction(sender_psid, "typing_on");
+          response = {
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Back to Main Menu",
+                payload: "MENU_MAIN_MENU"
+              }
+            ]         
+          }
+          callSendAPI(sender_psid, response);
+          }, 2300);
+  
+
+      });
+  }
+
+  else if (payload == "selecta_2") {
+    console.log("----- selecta_2 WORKING -----")
+
+             con.query("UPDATE shout_claim_selecta SET last_claim = ? WHERE user_id = ?",
+               [
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                sender_psid
+               ]
+             )
+
+             con.query("UPDATE shout_claim_selecta SET option_2 = ? WHERE user_id = ?",
+             [
+              "1",
+              sender_psid
+             ]
+           )
+
+      
+
+      user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+          }
+        callSendAPI(sender_psid, response);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+          response = {
+            attachment: {
+              type: "template",
+                payload: {
+                template_type: "media",
+                  elements: [
+                    {
+                      media_type: "image",
+                      url: "https://www.facebook.com/selectaphilippines/photos/a.693188287391632/1985843564792758/?type=3&theater",            
+                    }
+                  ]
+                }
+              }           
+            };
+          callSendAPI(sender_psid, response);
+          }, 1500);
+
+        
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: 
+                "You may present this mobile voucher at any 7/11 store near you."
+            }
+          callSendAPI(sender_psid, response);
+        }, 1800);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SELECTA_SHOUT_2"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2000);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "Thank you for participating! 😊"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2100);
+
+        setTimeout(function(){
+          senderAction(sender_psid, "typing_on");
+          response = {
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Back to Main Menu",
+                payload: "MENU_MAIN_MENU"
+              }
+            ]         
+          }
+          callSendAPI(sender_psid, response);
+          }, 2300);
+  
+
+      });
+  }
+
+  else if (payload == "selecta_3") {
+    console.log("----- selecta_3 WORKING -----")
+
+             con.query("UPDATE shout_claim_selecta SET last_claim = ? WHERE user_id = ?",
+               [
+                moment().format("YYYY/MM/DD HH:mm:ss"),
+                sender_psid
+               ]
+             )
+
+             con.query("UPDATE shout_claim_selecta SET option_3 = ? WHERE user_id = ?",
+             [
+              "1",
+              sender_psid
+             ]
+           )
+
+      
+
+      user.getUserData(sender_psid, result => {
+      const user = JSON.parse(result);
+        senderAction(sender_psid, "typing_on");
+          response = {   
+            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+          }
+        callSendAPI(sender_psid, response);
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+          response = {
+            attachment: {
+              type: "template",
+                payload: {
+                template_type: "media",
+                  elements: [
+                    {
+                      media_type: "image",
+                      url: "https://www.facebook.com/selectaphilippines/photos/a.693188287391632/1985844231459358/?type=3&theater",            
+                    }
+                  ]
+                }
+              }           
+            };
+          callSendAPI(sender_psid, response);
+          }, 1500);
+
+        
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: 
+                "You may present this mobile voucher at any 7/11 store near you."
+            }
+          callSendAPI(sender_psid, response);
+        }, 1800);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "PROMO CODE : SELECTA_SHOUT_2"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2000);
+
+
+        setTimeout(function(){     
+          senderAction(sender_psid, "typing_on");
+            response = {   
+              text: "Thank you for participating! 😊"
+            }
+          callSendAPI(sender_psid, response);
+        }, 2100);
+
+        setTimeout(function(){
+          senderAction(sender_psid, "typing_on");
+          response = {
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Back to Main Menu",
+                payload: "MENU_MAIN_MENU"
+              }
+            ]         
+          }
+          callSendAPI(sender_psid, response);
+          }, 2300);
+  
+
+      });
+  }
+
+
+
 
 // ------- SAVE ACTION TO DATABASE ------- //
   user.saveUser(sender_psid, payload, result => {
