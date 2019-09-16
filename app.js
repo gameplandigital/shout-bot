@@ -54,9 +54,9 @@ app.use(express.static(path.join(__dirname, "views")));
   res.render("send-concern", { sender_psid });
 });
 
-app.get("/marital-status", (req, res) => {
+app.get("/template1", (req, res) => {
   const sender_psid = req.query.sender_psid;
-  res.render("marital-status", { sender_psid });
+  res.render("template1", { sender_psid });
 });
 
 
@@ -479,17 +479,9 @@ function handleAddress(sender_psid, received_message){
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "Hello" + user.firstname + "!! 👋  \n\nI Have A Question for you..."
+            text: "Hello" + user.first_name + "!! 👋  \n\nI Have A Question for you..."
           }
         callSendAPI(sender_psid, response);
-
-        setTimeout(function(){     
-          senderAction(sender_psid, "typing_on");
-            response = {   
-              text: "PROMO CODE : SHOUT_BR3R123"
-            }
-          callSendAPI(sender_psid, response);
-        }, 1500);
 
       setTimeout(function(){     
         senderAction(sender_psid, "typing_on");
@@ -500,58 +492,21 @@ function handleAddress(sender_psid, received_message){
                 content_type:"text",
                 title:"Creamy Buko Pandan Espesyal",
                 payload:"selecta_1",
-                image_url:"http://example.com/img/red.png"
               },
               {
                 content_type:"text",
                 title:"Delightful Choco Hazelnut Crinkles",
                 payload:"selecta_2",
-                image_url:"http://example.com/img/green.png"
               },
               {
                 content_type:"text",
                 title:"Rich Ube Salted Egg con Quezo",
                 payload:"selecta_3",
-                image_url:"http://example.com/img/green.png"
               }
             ]          
           }
         callSendAPI(sender_psid, response);
-      }, 1800);
-
-      setTimeout(function(){
-        senderAction(sender_psid, "typing_on");
-        response = {
-          attachment: {
-            type: "template",
-              payload: {
-              template_type: "media",
-                elements: [
-                  {
-                    media_type: "image",
-                    url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",        
-                  }
-                ]
-              }
-            }           
-          };
-        callSendAPI(sender_psid, response);
-        }, 2000);
-        
-
-        setTimeout(function(){
-          senderAction(sender_psid, "typing_on");
-          response = {
-            quick_replies: [
-              {
-                content_type: "text",
-                title: "Back to Main Menu",
-                payload: "MENU_MAIN_MENU"
-              }
-            ]         
-          }
-          callSendAPI(sender_psid, response);
-          }, 2000);
+      }, 2000);        
   
 
       });
@@ -1253,7 +1208,7 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 1337, () => {
+app.listen(process.env.PORT || 8000, () => {
   console.log("Server is now running.");
 });
 
