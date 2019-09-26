@@ -241,7 +241,7 @@ function promo1(sender_psid){
         const user = JSON.parse(result);
           senderAction(sender_psid, "typing_on");
             response = {   
-              text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou just won your first promo."
+              text: "🎉 CONGRATULATIONS " + user.first_name + "!! 🎉 \n\nYou just won your first promo."
             }
           callSendAPI(sender_psid, response);
   
@@ -273,13 +273,13 @@ function promo1(sender_psid){
                     {
                       media_type: "image",
                       url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",
-                      // buttons: [
-                      //   {
-                      //     type: "web_url",
-                      //     url: "www.google.com",
-                      //     title: "Claim promo",
-                      //   }
-                      // ]              
+                       buttons: [
+                         {
+                           type: "web_url",
+                           url: "www.google.com",
+                           title: "Claim promo",
+                         }
+                       ]              
                     }
                   ]
                 }
@@ -376,7 +376,7 @@ function handleAddress(sender_psid, received_message){
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "🎉 CONGRATULATIONS" + user.firstname + "!! 🎉 \n\nYou just won your first promo."
+            text: "🎉 CONGRATULATIONS " + user.firstname + "!! 🎉 \n\nYou just won your first promo."
           }
         callSendAPI(sender_psid, response);
 
@@ -408,13 +408,13 @@ function handleAddress(sender_psid, received_message){
                   {
                     media_type: "image",
                     url: "https://www.facebook.com/photo.php?fbid=451622012107093&set=a.450031398932821&type=3&theater",
-                    // buttons: [
-                    //   {
-                    //     type: "web_url",
-                    //     url: "www.google.com",
-                    //     title: "Claim promo",
-                    //   }
-                    // ]              
+                     buttons: [
+                       {
+                         type: "web_url",
+                         url: "www.google.com",
+                         title: "Claim promo",
+                       }
+                     ]              
                   }
                 ]
               }
@@ -802,7 +802,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+            text: "🎉 CONGRATULATIONS " + user.first_name + "!! 🎉 \n\nYou pick"
           }
         callSendAPI(sender_psid, response);
 
@@ -851,7 +851,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
               text: "Thank you for participating! 😊"
             }
           callSendAPI(sender_psid, response);
-        }, 2100);
+        }, 2200);
 
         setTimeout(function(){
           senderAction(sender_psid, "typing_on");
@@ -894,7 +894,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+            text: "🎉 CONGRATULATIONS " + user.first_name + "!! 🎉 \n\nYou pick"
           }
         callSendAPI(sender_psid, response);
 
@@ -986,7 +986,7 @@ var handleQuickReply = (sender_psid, received_postback, received_message, callba
       const user = JSON.parse(result);
         senderAction(sender_psid, "typing_on");
           response = {   
-            text: "🎉 CONGRATULATIONS" + user.first_name + "!! 🎉 \n\nYou pick"
+            text: "🎉 CONGRATULATIONS " + user.first_name + "!! 🎉 \n\nYou pick"
           }
         callSendAPI(sender_psid, response);
 
